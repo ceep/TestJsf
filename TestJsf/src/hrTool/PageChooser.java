@@ -6,11 +6,12 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 
 
 @ManagedBean
-@ApplicationScoped
+@SessionScoped
 public class PageChooser implements Serializable {
 
     private String page;
@@ -27,7 +28,7 @@ public class PageChooser implements Serializable {
 
 	@PostConstruct
     public void init() {
-        
+		if(page==null) page = "Dashboard";
         System.out.println("PageChooser INIT with page set to: " + page);
     }
 
