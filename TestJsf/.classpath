@@ -13,7 +13,6 @@
 	<classpathentry exported="true" kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry exported="true" kind="lib" path="WebContent/WEB-INF/lib/javax.faces.jar"/>
 	<classpathentry exported="true" kind="lib" path="WebContent/WEB-INF/lib/primefaces-5.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="WebContent/WEB-INF/lib/primefaces-5.2-sources.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
