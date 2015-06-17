@@ -113,13 +113,12 @@
 				        			maxlength="2"/>
 			    		
 			    		<p:outputLabel for="team" value="New team:" />
-				        <p:selectOneMenu id="team" value="#{employeesView.employeeToEdit.team}" 
+				        <p:selectOneListbox id="team" value="#{employeesView.employeeToEdit.team}" 
 				        					style="width:125px" 
-				        					required="true" 
-				        					requiredMessage="Please provide a team." >
-				            <f:selectItem itemLabel="Select One" itemValue="" />
+				        					required="true" scrollHeight="50"
+				        					requiredMessage="Please provide a team.">
             				<f:selectItems value="#{employeesView.teams}" />
-				        </p:selectOneMenu>
+				        </p:selectOneListbox>
 				        
 				        <p:outputLabel for="tasks" value="Tasks:" />
 				         <p:selectManyMenu id="tasks" value="#{employeesView.employeeToEdit.associatedTasks}" 
@@ -182,13 +181,12 @@
 				        			maxlength="2"/>
 			    		
 			    		<p:outputLabel for="team" value="Team:" />
-				        <p:selectOneMenu id="team" value="#{employeesView.employeeToAdd.team}" 
+				        <p:selectOneListbox id="team" value="#{employeesView.employeeToAdd.team}" 
 				        					style="width:125px" 
-				        					required="true" 
+				        					required="true" scrollHeight="50"
 				        					requiredMessage="Please provide a team.">
-				            <f:selectItem itemLabel="Select One" itemValue="" />
             				<f:selectItems value="#{employeesView.teams}" />
-				        </p:selectOneMenu>
+				        </p:selectOneListbox>
 			    		
 			    		<p:outputLabel for="tasks" value="Tasks:" />
 				         <p:selectManyMenu id="tasks" value="#{employeesView.employeeToAdd.associatedTasks}" 
