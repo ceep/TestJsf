@@ -32,13 +32,7 @@
 			    </p:column>
 			    
 			    <p:column style="width:65px" headerText="Actions">
-			    	<p:commandButton icon="ui-icon-trash"
-	                        title="Delete this team"
-	                        action="#{teamsView.remove}"
-	                        update="teamsTableForm:teamTable">
-	               		<f:setPropertyActionListener value="#{team}" target="#{teamsView.teamToDelete}" />
-	                </p:commandButton>
-	                <p:commandButton icon="ui-icon-pencil"
+			    	<p:commandButton icon="ui-icon-pencil"
 	                        title="Edit this team"
 	                        action="#{teamsView.edit}"
 	                        onclick="PF('editRowDialog').show()"     
@@ -46,7 +40,13 @@
 	                        >
 	                    <f:setPropertyActionListener value="#{team}" target="#{teamsView.teamToEdit}" />
 	                    <f:setPropertyActionListener value="#{team.id}" target="#{teamsView.teamIdToEdit}" />
-	                </p:commandButton>       
+	                </p:commandButton>      
+			    	<p:commandButton icon="ui-icon-trash"
+	                        title="Delete this team"
+	                        action="#{teamsView.remove}"
+	                        update="teamsTableForm:teamTable">
+	               		<f:setPropertyActionListener value="#{team}" target="#{teamsView.teamToDelete}" />
+	                </p:commandButton>
 			    </p:column>
 			</p:dataTable>
 		</h:form>
