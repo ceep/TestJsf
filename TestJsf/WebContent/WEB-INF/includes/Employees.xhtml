@@ -5,10 +5,209 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	
-	
-	
 	<h:body>
 	
-		Employees
+		<h:form id="employeesTableForm" >
+			<p:dataTable var="employee" value="#{employeesView.employees}" paginator="true" rows="10"
+	                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+	                 id="employeeTable" lazy="true" paginatorPosition="bottom" async="true" >
+			    <p:column headerText="Employee Name">
+			        <h:outputText value="#{employee.name}" />
+			    </p:column>
+			 
+			    <p:column headerText="Team">
+			        <h:outputText value="#{employee.team}" />
+			    </p:column>
+			 
+			    <p:column headerText="Days Off">
+			        <h:outputText value="#{employee.daysOff}" />
+			    </p:column>
+			    
+			     <p:column headerText="Special Days Off">
+			        <h:outputText value="#{employee.specialDaysOff}" />
+			    </p:column>
+			    
+			     <p:column headerText="Join Date">
+			        <h:outputText value="#{employee.joinDate}" />
+			    </p:column>
+			    
+			     <p:column headerText="End Date">
+			        <h:outputText value="#{employee.endDate}" />
+			    </p:column>
+			    
+			    <p:column headerText="Tasks">
+			        <h:outputText value="#{employee.associatedTasks}" />
+			    </p:column>
+			    
+			    <p:column headerText="Requests">
+			        <h:outputText value="#{employee.pendingRequests}" />
+			    </p:column>
+			    
+			    <p:column style="width:65px" headerText="Actions">
+			    	<p:commandButton icon="ui-icon-pencil"
+	                        title="Edit details"
+	                        action="#{employeesView.edit}"
+	                        onclick="PF('editRowDialog2').show()"     
+	                        update="dialogForm:documentPanel" 
+	                        >
+	                    <f:setPropertyActionListener value="#{employee}" target="#{employeesView.employeeToEdit}" />
+	                    <f:setPropertyActionListener value="#{employee.id}" target="#{employeesView.employeeIdToEdit}" />
+	                </p:commandButton>      
+			    	<p:commandButton icon="ui-icon-trash"
+	                        title="Delete employee"
+	                        action="#{employeesView.remove}"
+	                        update="employeesTableForm:employeeTable">
+	               		<f:setPropertyActionListener value="#{employee}" target="#{employeesView.employeeToDelete}" />
+	                </p:commandButton>
+			    </p:column>
+			</p:dataTable>
+		</h:form>
+		
+		<h:form>
+			<h:panelGroup id="AddButton" layout="block">
+				<p:commandButton icon="ui-icon-plus"
+	                        title="Add employee"
+	                        action="#{employeesView.createEmployee}"
+	                        onclick="PF('addEmployeeDialog').show()"     
+	                        update="dialogAddForm:documentPanel" 
+	                        >
+			</p:commandButton>
+			</h:panelGroup>
+		</h:form>
+		
+		<p:dialog id="editEmployeeDialog" header="Edit Details" widgetVar="editRowDialog2" modal="true" showEffect="explode" hideEffect="fade" resizable="false">
+			<h:form id="dialogForm">
+				
+			
+			
+				<p:outputPanel id="documentPanel">
+            		<h:panelGrid columns="2" columnClasses="label, value">
+				        <p:outputLabel value="New Name:" /> 
+				        <p:inputText value="#{employeesView.employeeToEdit.name}" 
+				        			required="true" 
+				        			requiredMessage="Please provide at least a character for the name of the Employee." 
+				        			maxlength="20"/>
+			    		
+			    		<p:outputLabel value="New join date:" for="joinDate"/> 
+			    		<p:calendar id="joinDate" 
+			    					value="#{employeesView.employeeToEdit.joinDate}"
+			    					effect="fold" required="true" requiredMessage="Please choose a date."/>
+			    		
+			    		<p:outputLabel value="New end date:" for="endDate"/> 
+			    		<p:calendar id="endDate" 
+			    					value="#{employeesView.employeeToEdit.endDate}"
+			    					effect="fold" 
+			    					required="true" 
+			    					requiredMessage="Please choose a date."/>
+			    		
+			    		<p:outputLabel value="New number of days off:" /> 
+				        <p:inputText value="#{employeesView.employeeToEdit.daysOff}" 
+				        			required="true" 
+				        			requiredMessage="Please provide a number of days."
+				        			maxlength="2"/>
+			    		
+			    		<p:outputLabel value="New number of special days off:" /> 
+				        <p:inputText value="#{employeesView.employeeToEdit.specialDaysOff}" 
+				        			required="true" 
+				        			requiredMessage="Please provide a number of special days." 
+				        			maxlength="2"/>
+			    		
+			    		<p:outputLabel for="team" value="New team:" />
+				        <p:selectOneMenu id="team" value="#{employeesView.employeeToEdit.team}" 
+				        					style="width:125px" 
+				        					required="true" 
+				        					requiredMessage="Please provide a team." >
+				            <f:selectItem itemLabel="Select One" itemValue="" />
+            				<f:selectItems value="#{employeesView.teams}" />
+				        </p:selectOneMenu>
+				        
+				        <p:outputLabel for="tasks" value="Tasks:" />
+				         <p:selectManyMenu id="tasks" value="#{employeesView.employeeToEdit.associatedTasks}" 
+				        					style="width:125px">
+            				<f:selectItems value="#{employeesView.tasks}" />
+				        </p:selectManyMenu>
+			    		
+			    		
+			    		<p:commandButton value="Save" 
+			    						 action="#{employeesView.save}" 
+			    						 onclick="PF('editRowDialog2').hide()" 
+			    						 update="employeesTableForm:employeeTable"
+			    						 async="true">
+			    			<f:setPropertyActionListener value="#{employeesView.employeeToEdit.name}" target="#{employeesView.newName}" />
+			    			<f:setPropertyActionListener value="#{employeesView.employeeToEdit.joinDate}" target="#{employeesView.newJoinDate}" />
+			    			<f:setPropertyActionListener value="#{employeesView.employeeToEdit.endDate}" target="#{employeesView.newEndDate}" />
+			    			<f:setPropertyActionListener value="#{employeesView.employeeToEdit.daysOff}" target="#{employeesView.newDaysOff}" />
+			    			<f:setPropertyActionListener value="#{employeesView.employeeToEdit.specialDaysOff}" target="#{employeesView.newSpecialDaysOff}" />
+			    			<f:setPropertyActionListener value="#{employeesView.employeeToEdit.team}" target="#{employeesView.newTeam}" />
+			    			<f:setPropertyActionListener value="#{employeesView.employeeToEdit.associatedTasks}" target="#{employeesView.newAssociatedTasks}" />
+			    		</p:commandButton>
+		    		</h:panelGrid>
+		    	</p:outputPanel>	
+		    	</h:form>
+		</p:dialog>
+		
+		<p:dialog id="addEmployeeDialog" header="Add Employee" widgetVar="addEmployeeDialog" modal="true" showEffect="explode" hideEffect="fade" resizable="false">
+			<h:form id="dialogAddForm">
+				<p:outputPanel id="documentPanel">
+            		<h:panelGrid columns="2" columnClasses="label, value">
+				        <p:outputLabel value="Name:" /> 
+				        <p:inputText value="#{employeesView.employeeToAdd.name}" 
+				        				required="true" 
+				        				requiredMessage="Please provide at least a character for the name of the Employee." 
+				        				maxlength="20"/>
+			    		
+			    		<p:outputLabel value="Join date:" for="joinDate"/> 
+			    		<p:calendar id="joinDate" 
+			    					value="#{employeesView.employeeToAdd.joinDate}"
+			    					effect="fold" required="true" 
+			    					requiredMessage="Please choose a start date."/>
+			    		
+			    		<p:outputLabel value="End date:" for="endDate"/> 
+			    		<p:calendar id="endDate" 
+			    					value="#{employeesView.employeeToAdd.endDate}"
+			    					effect="fold" 
+			    					required="true" 
+			    					requiredMessage="Please choose an end date."/>
+			    		
+			    		<p:outputLabel value="Number of days off:" /> 
+				        <p:inputText value="#{employeesView.employeeToAdd.daysOff}" 
+				        			required="true" 
+				        			requiredMessage="Please provide a number of days."
+				        			maxlength="2"/>
+			    		
+			    		<p:outputLabel value="Number of special days off:" /> 
+				        <p:inputText value="#{employeesView.employeeToAdd.specialDaysOff}" 
+				        			required="true" 
+				        			requiredMessage="Please provide a number of special days." 
+				        			maxlength="2"/>
+			    		
+			    		<p:outputLabel for="team" value="Team:" />
+				        <p:selectOneMenu id="team" value="#{employeesView.employeeToAdd.team}" 
+				        					style="width:125px" 
+				        					required="true" 
+				        					requiredMessage="Please provide a team.">
+				            <f:selectItem itemLabel="Select One" itemValue="" />
+            				<f:selectItems value="#{employeesView.teams}" />
+				        </p:selectOneMenu>
+			    		
+			    		<p:outputLabel for="tasks" value="Tasks:" />
+				         <p:selectManyMenu id="tasks" value="#{employeesView.employeeToAdd.associatedTasks}" 
+				        					style="width:125px">
+            				<f:selectItems value="#{employeesView.tasks}" />
+				        </p:selectManyMenu>
+			    		
+			    		
+			    		
+			    		<p:commandButton value="Save" 
+			    						 action="#{employeesView.add}" 
+			    						 onclick="PF('addEmployeeDialog').hide()" 
+			    						 update="employeesTableForm:employeeTable"
+			    						 async="true">
+			    		</p:commandButton>
+		    		</h:panelGrid>
+		    	</p:outputPanel>	
+		    	</h:form>
+		</p:dialog>
+		
 	</h:body>
 </html>

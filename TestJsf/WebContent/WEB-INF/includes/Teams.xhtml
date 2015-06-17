@@ -9,8 +9,6 @@
 	
 	<h:body>
 	
-	
-	
 		<h:form id="teamsTableForm" >
 			<p:dataTable var="team" value="#{teamsView.teams}" paginator="true" rows="10"
 	                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
@@ -91,7 +89,7 @@
 			    		<p:outputLabel value="Formed on:" for="date"/> 
 			    		<p:calendar id="date" 
 			    					value="#{teamsView.teamToAdd.formedDate}"
-			    					effect="fold"/>
+			    					effect="fold" required="true" requiredMessage="Please choose a date."/>
 			    		
 			    		<p:commandButton value="Save" 
 			    						 action="#{teamsView.add}" 

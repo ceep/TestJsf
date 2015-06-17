@@ -5,24 +5,24 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <h:body>
-		<h:form id="teamsTableForm2">
-			<p:dataTable var="team" value="#{teamsView.teams}" paginator="true" rows="10"
+		<h:form id="dashboardForm">
+			<p:dataTable var="dash" value="#{dashboardView.dashboards}" paginator="true" rows="10"
 	                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-	                 id="teamTable2" lazy="true" paginatorPosition="bottom" async="true" >
+	                 id="dashTable" lazy="true" paginatorPosition="bottom" async="true" >
 			    <p:column headerText="Team Name">
-			        <h:outputText value="#{team.name}" />
+			        <h:outputText value="#{dash.name}" />
 			    </p:column>
 			 
 			    <p:column headerText="Number of employees">
-			        <h:outputText value="#{team.numberOfEmployees}" />
+			        <h:outputText value="#{dash.numberOfEmployees}" />
 			    </p:column>
 			 
 			    <p:column headerText="Number of employees on vacation">
-			        <h:outputText value="#{team.numberOfEmployeesOnVacation}" />
+			        <h:outputText value="#{dash.numberOfEmployeesOnVacation}" />
 			    </p:column>
 			    
-			     <p:column headerText="Formed on">
-			        <h:outputText value="#{team.formedDate}" />
+			     <p:column headerText="Remaining tasks">
+			        <h:outputText value="#{dash.tasks}" />
 			    </p:column>
 			  
 			</p:dataTable>

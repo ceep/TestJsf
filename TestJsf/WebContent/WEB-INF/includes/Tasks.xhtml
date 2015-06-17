@@ -4,11 +4,143 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-	
-	
-	
 	<h:body>
 	
-		Tasks
+		<h:form id="tasksTableForm" >
+			<p:dataTable var="task" value="#{tasksView.tasks}" paginator="true" rows="10"
+	                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+	                 id="tasksTable" lazy="true" paginatorPosition="bottom" async="true" >
+			    <p:column headerText="Code">
+			        <h:outputText value="#{task.code}" />
+			    </p:column>
+			    
+			    <p:column headerText="Name">
+			        <h:outputText value="#{task.name}" />
+			    </p:column>
+			 
+			    <p:column headerText="Description">
+			        <h:outputText value="#{task.description}" />
+			    </p:column>
+			 
+			    <p:column headerText="Start date">
+			        <h:outputText value="#{task.startDate}" />
+			    </p:column>
+			    
+			     <p:column headerText="End date">
+			        <h:outputText value="#{task.endDate}" />
+			    </p:column>
+			    
+			    <p:column style="width:65px" headerText="Actions">
+			    	<p:commandButton icon="ui-icon-pencil"
+	                        title="Edit this task"
+	                        action="#{tasksView.edit}"
+	                        onclick="PF('editTaskRowDialog').show()"     
+	                        update="dialogForm:documentPanel" 
+	                        >
+	                    <f:setPropertyActionListener value="#{task}" target="#{tasksView.taskToEdit}" />
+	                    <f:setPropertyActionListener value="#{task.id}" target="#{tasksView.taskIdToEdit}" />
+	                </p:commandButton>      
+			    	<p:commandButton icon="ui-icon-trash"
+	                        title="Delete this task"
+	                        action="#{tasksView.remove}"
+	                        update="tasksTableForm:tasksTable">
+	               		<f:setPropertyActionListener value="#{task}" target="#{tasksView.taskToDelete}" />
+	                </p:commandButton>
+			    </p:column>
+			</p:dataTable>
+		</h:form>
+		
+		<h:form>
+			<h:panelGroup id="AddButton" layout="block">
+				<p:commandButton icon="ui-icon-plus"
+	                        title="Edit this task"
+	                        action="#{tasksView.createTask}"
+	                        onclick="PF('addTaskDialog').show()"     
+	                        update="dialogAddTaskForm:documentPanel" 
+	                        >
+			</p:commandButton>
+			</h:panelGroup>
+		</h:form>
+		
+		<p:dialog id="dialog" header="Edit Name" widgetVar="editTaskRowDialog" modal="true" showEffect="explode" hideEffect="fade" resizable="false">
+			<h:form id="dialogForm">
+				<p:outputPanel id="documentPanel">
+            		<h:panelGrid columns="2" columnClasses="label, value">
+				         <p:outputLabel value="New Code:" /> 
+				        <p:inputText value="#{tasksView.taskToEdit.code}" required="true" requiredMessage="Please provide at least a character for the code of the Task." maxlength="5"/>
+				        
+				        <p:outputLabel value="New Name:" /> 
+				        <p:inputText value="#{tasksView.taskToEdit.name}" required="true" requiredMessage="Please provide at least a character for the name of the Task." maxlength="20"/>
+			    		
+			    		
+			    		<p:outputLabel value="New Description:" /> 
+				        <p:inputText value="#{tasksView.taskToEdit.description}" required="false"/>
+			    		
+			    		<p:outputLabel value="New Start date:" for="date"/> 
+			    		<p:calendar id="date" 
+			    					value="#{tasksView.taskToEdit.startDate}"
+			    					effect="fold" required="true" requiredMessage="Please choose a start date."/>
+			    		
+			    		
+			    		<p:outputLabel value="New End date:" for="date2"/> 
+			    		<p:calendar id="date2" 
+			    					value="#{tasksView.taskToEdit.endDate}"
+			    					effect="fold" required="true" requiredMessage="Please choose an end date."/>
+			    		
+			    		<p:commandButton value="Save" 
+			    						 action="#{tasksView.save}" 
+			    						 onclick="PF('editTaskRowDialog').hide()" 
+			    						 update="tasksTableForm:tasksTable"
+			    						 async="true">
+			    			<f:setPropertyActionListener value="#{tasksView.taskToEdit.name}" target="#{tasksView.newName}" />
+			    			<f:setPropertyActionListener value="#{tasksView.taskToEdit.startDate}" target="#{tasksView.newStartDate}" />
+			    			<f:setPropertyActionListener value="#{tasksView.taskToEdit.endDate}" target="#{tasksView.newEndDate}" />
+			    			<f:setPropertyActionListener value="#{tasksView.taskToEdit.description}" target="#{tasksView.newDescription}" />
+			    			<f:setPropertyActionListener value="#{tasksView.taskToEdit.code}" target="#{tasksView.newCode}" />
+			    		</p:commandButton>
+		    		</h:panelGrid>
+		    	</p:outputPanel>	
+		    	</h:form>
+		</p:dialog>
+		
+		<p:dialog id="addTaskDialog" header="Add task" widgetVar="addTaskDialog" modal="true" showEffect="explode" hideEffect="fade" resizable="false">
+			<h:form id="dialogAddTaskForm">
+				<p:outputPanel id="documentPanel">
+            		<h:panelGrid columns="2" columnClasses="label, value">
+				        
+				        <p:outputLabel value="Code:" /> 
+				        <p:inputText value="#{tasksView.taskToAdd.code}" required="true" requiredMessage="Please provide at least a character for the code of the Task." maxlength="5"/>
+				        
+				        <p:outputLabel value="Name:" /> 
+				        <p:inputText value="#{tasksView.taskToAdd.name}" required="true" requiredMessage="Please provide at least a character for the name of the Task." maxlength="20"/>
+			    		
+			    		
+			    		<p:outputLabel value="Description:" /> 
+				        <p:inputText value="#{tasksView.taskToAdd.description}" required="false"/>
+			    		
+			    		<p:outputLabel value="Start date:" for="date"/> 
+			    		<p:calendar id="date" 
+			    					value="#{tasksView.taskToAdd.startDate}"
+			    					effect="fold" required="true" requiredMessage="Please choose a start date."/>
+			    		
+			    		
+			    		<p:outputLabel value="End date:" for="date2"/> 
+			    		<p:calendar id="date2" 
+			    					value="#{tasksView.taskToAdd.endDate}"
+			    					effect="fold" required="true" requiredMessage="Please choose an end date."/>
+			    		
+			    		
+			    		
+			    		<p:commandButton value="Save" 
+			    						 action="#{tasksView.add}" 
+			    						 onclick="PF('addTaskDialog').hide()" 
+			    						 update="tasksTableForm:tasksTable"
+			    						 async="true">
+			    		</p:commandButton>
+		    		</h:panelGrid>
+		    	</p:outputPanel>	
+		    	</h:form>
+		</p:dialog>
+		
 	</h:body>
 </html>

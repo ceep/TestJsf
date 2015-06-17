@@ -75,13 +75,14 @@
 
 			<td style="vertical-align: top;">
 					<h:panelGroup id="content" layout="block" >
+						<p:growl id="growl" showDetail="false" autoUpdate="true"/>
 						<ui:include src="/WEB-INF/includes/#{pageChooser.page}.xhtml"/>
 					</h:panelGroup>
 			</td>
 		</tr>
 	</table>
-	<!-- h:panelGroup id="footer" layout="block">
+	<h:panelGroup id="footer" layout="block">
 		<ui:include src="/WEB-INF/includes/footer.xhtml" />
-	</h:panelGroup-->
+	</h:panelGroup>
 </h:body>
 </html>
