@@ -1,22 +1,29 @@
 package hrTool.views;
 
-import hrTool.beans.Task;
+import hrTool.application.Application;
+import hrTool.controller.TasksAssociationController;
+import hrTool.controller.TasksController;
+import hrTool.controller.TeamController;
+import hrTool.controller.WorkedHoursController;
+import hrTool.model.Task;
+import hrTool.model.Taskassociation;
+import hrTool.model.Team;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 
 @ManagedBean(name="tasksView")
 @ViewScoped
 public class Tasks implements Serializable{
 
-	private LinkedList <Task> tasks;
+	private List <Task> tasks;
 	private Task taskToEdit;
 	private Task taskToAdd;
 	private Task taskToDelete;
@@ -27,20 +34,76 @@ public class Tasks implements Serializable{
 	private Date newEndDate;
 	private String newCode;
 	private String newDescription;
+	private int newTotalHours;
+	private String newTeam;
+
+	private LinkedList <SelectItem> teams;
+	
+	
+	public String getNewTeam() {
+		return newTeam;
+	}
+
+
+
+
+	public void setNewTeam(String newTeam) {
+		this.newTeam = newTeam;
+	}
+
 	
 	
 	
-	
-	public LinkedList<Task> getTasks() {
+	public LinkedList<SelectItem> getTeams() {
+		teams.clear();
+		
+		// need to set the company
+		List <Team> teamList =new TeamController(Application.getInstance().getEntityManagerFactory()).getTeamsByCompany(1);
+		for (Team team : teamList) {
+			teams.add(new SelectItem(team.getTeamId()+"", team.getName()));
+		}
+		
+		return teams;
+	}
+
+
+
+
+	public void setTeams(LinkedList<SelectItem> teams) {
+		this.teams = teams;
+	}
+
+
+
+
+	public int getNewTotalHours() {
+		return newTotalHours;
+	}
+
+
+
+
+	public void setNewTotalHours(int newTotalHours) {
+		this.newTotalHours = newTotalHours;
+	}
+
+
+
+
+	public List<Task> getTasks() {
+		// need to set the company
+		tasks=new TasksController(Application.getInstance().getEntityManagerFactory()).getTasksByCompany(1);
+		
 		return tasks;
 	}
 
 
 
 
-	public void setTasks(LinkedList<Task> tasks) {
+	public void setTasks(List<Task> tasks) {
 		this.tasks = tasks;
 	}
+	
 
 
 
@@ -174,30 +237,21 @@ public class Tasks implements Serializable{
 	@PostConstruct
     public void init() {
 	 	tasks = new LinkedList<Task>();
-        createTasks(5);
+	 	teams=new LinkedList<SelectItem>();
         System.out.println("Tasks INIT...");
     }
 	
 	
-	private void createTasks(int number){
-		 for (int i=0; i<number; i++){
-			 Task task = new Task();
-			 task.setCode("C"+i);
-			 task.setName("A"+i);
-			 task.setDescription("Desc"+i);
-			 task.setEndDate(new Date());
-			 task.setStartDate(new Date());
-			 task.setId(i);
-			 task.setCompanyId(i+100);
-			 tasks.add(task);
-		 }
-		 
-	 }
 	
 	public void remove() {
 	    try {
-	    	System.out.println("Deleting: " + taskToDelete.getName());
-	        tasks.remove(taskToDelete);
+	    	System.out.println("Deleting: " + taskToDelete.getName() );
+	    	// delete from tasks table
+	        new TasksController(Application.getInstance().getEntityManagerFactory()).deleteTask(taskToDelete);
+	        // delete from tasks associations table
+	        new TasksAssociationController(Application.getInstance().getEntityManagerFactory()).deleteTaskAssociations(taskToDelete.getTaskId());
+	        // delete from worked hours table
+	        new WorkedHoursController(Application.getInstance().getEntityManagerFactory()).deleteWorkedHours(taskToDelete.getTaskId());
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
@@ -210,30 +264,18 @@ public class Tasks implements Serializable{
 	 public void save(){
 		
 		 System.out.println("Saving...");
+		 new TasksController(Application.getInstance().getEntityManagerFactory()).updateTask(taskIdToEdit, newCode, newDescription, newName, newTotalHours, newStartDate, newEndDate);
 		 
-		 for (Task task : tasks) {
-			if(task.getId()==taskIdToEdit){
-				task.setName(newName);
-				task.setCode(newCode);
-				task.setDescription(newDescription);
-				task.setStartDate(newStartDate);
-				task.setEndDate(newEndDate);
-				break;
-			}
-		}
 		 
 	 }
 	 
 	 public void add(){
-		 System.out.println("Adding task with name: " + taskToAdd.getName());
-		 for (Task task : tasks) {
-			if(task.getName().equals(taskToAdd.getName())){
-				FacesContext context = FacesContext.getCurrentInstance();
-		        context.addMessage(null, new FacesMessage("Error",  "Name already exists") );
-				return;
-			}
-		}
-		tasks.add(taskToAdd);
+		System.out.println("Adding task with name: " + taskToAdd.getName()+ " and value = " + taskToAdd.getTeamId());
+		
+		// need to set the company 
+		taskToAdd.setCompanyId(1);
+		
+		new TasksController(Application.getInstance().getEntityManagerFactory()).addTask(taskToAdd);
 	 }
 	 
 	 public void createTask(){

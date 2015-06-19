@@ -1,12 +1,19 @@
 package hrTool.views;
 
-import hrTool.beans.Employee;
-import hrTool.beans.Task;
-import hrTool.beans.Team;
+import hrTool.application.Application;
+import hrTool.controller.EmployeeController;
+import hrTool.controller.TasksController;
+import hrTool.controller.TeamController;
+import hrTool.model.Employee;
+import hrTool.model.Request;
+import hrTool.model.Task;
+import hrTool.model.Team;
+import hrTool.wrappers.EmployeeWrapper;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -17,15 +24,18 @@ import javax.faces.model.SelectItem;
 @ViewScoped
 public class Employees implements Serializable{
 
-	private LinkedList <Employee> employees;
-	private Employee employeeToEdit;
-	private Employee employeeToDelete;
-	private Employee employeeToAdd;
+	private List <EmployeeWrapper> employees;
+	
+	
+	
+	private EmployeeWrapper employeeToEdit;
+	private EmployeeWrapper employeeToDelete;
+	private EmployeeWrapper employeeToAdd;
 	
 	private int employeeIdToEdit;
 	
 	private String newName;
-	private String newTeam;
+	private int newTeamId;
 	private int newDaysOff;
 	private int newSpecialDaysOff;
 	private Date newJoinDate;
@@ -37,39 +47,59 @@ public class Employees implements Serializable{
 	
 
 	public LinkedList<SelectItem> getTasks() {
+		tasks.clear();
+		// need to set the company id
+		List <Task> ta = new TasksController(Application.getInstance().getEntityManagerFactory()).getTasksByCompany(1);
+		for (Task task : ta) {
+			tasks.add(new SelectItem(task.getTaskId()+"", task.getCode()));
+		}
 		return tasks;
 	}
 	public void setTasks(LinkedList<SelectItem> tasks) {
 		this.tasks = tasks;
 	}
 	public LinkedList<SelectItem> getTeams() {
+		teams.clear();
+		// need to set the company
+		List<Team> teamList = new TeamController(Application.getInstance().getEntityManagerFactory()).getTeamsByCompany(1);
+		for (Team team : teamList) {
+			teams.add(new SelectItem(team.getTeamId()+"", team.getName()));
+		}
 		return teams;
 	}
 	public void setTeams(LinkedList<SelectItem> teams) {
 		this.teams = teams;
 	}
-	public LinkedList<Employee> getEmployees() {
+	public List<EmployeeWrapper> getEmployees() {
+		employees.clear();
+		// need to set the company
+		List <Employee> temp = new EmployeeController(Application.getInstance().getEntityManagerFactory()).getEmployeesByCompany(1);
+		for (Employee employee : temp) {
+			EmployeeWrapper er = new EmployeeWrapper();
+			er.setEmployee(employee);
+			employees.add(er);
+		}
 		return employees;
 	}
-	public void setEmployees(LinkedList<Employee> employees) {
+	public void setEmployees(List<EmployeeWrapper> employees) {
 		this.employees = employees;
 	}
-	public Employee getEmployeeToEdit() {
+	public EmployeeWrapper getEmployeeToEdit() {
 		return employeeToEdit;
 	}
-	public void setEmployeeToEdit(Employee employeeToEdit) {
+	public void setEmployeeToEdit(EmployeeWrapper employeeToEdit) {
 		this.employeeToEdit = employeeToEdit;
 	}
-	public Employee getEmployeeToDelete() {
+	public EmployeeWrapper getEmployeeToDelete() {
 		return employeeToDelete;
 	}
-	public void setEmployeeToDelete(Employee employeeToDelete) {
+	public void setEmployeeToDelete(EmployeeWrapper employeeToDelete) {
 		this.employeeToDelete = employeeToDelete;
 	}
-	public Employee getEmployeeToAdd() {
+	public EmployeeWrapper getEmployeeToAdd() {
 		return employeeToAdd;
 	}
-	public void setEmployeeToAdd(Employee employeeToAdd) {
+	public void setEmployeeToAdd(EmployeeWrapper employeeToAdd) {
 		this.employeeToAdd = employeeToAdd;
 	}
 	public int getEmployeeIdToEdit() {
@@ -84,11 +114,11 @@ public class Employees implements Serializable{
 	public void setNewName(String newName) {
 		this.newName = newName;
 	}
-	public String getNewTeam() {
-		return newTeam;
+	public int getNewTeamId() {
+		return newTeamId;
 	}
-	public void setNewTeam(String newTeam) {
-		this.newTeam = newTeam;
+	public void setNewTeamId(int newTeamId) {
+		this.newTeamId = newTeamId;
 	}
 	public int getNewDaysOff() {
 		return newDaysOff;
@@ -124,115 +154,55 @@ public class Employees implements Serializable{
 	
 	@PostConstruct
     public void init() {
-	 	employees = new LinkedList<Employee>();
+	 	employees = new LinkedList<EmployeeWrapper>();
 	 	teams=new LinkedList<SelectItem>();
 	 	tasks = new LinkedList<SelectItem>();
-        createEmployees(3);
-        createTeams(3);
-        createTasks(30);
         System.out.println("Employees INIT...");
     }
 	
-	 private void createTeams(int number){
-		 for (int i=0; i<number; i++){
-			 Team team = new Team();
-			 team.setName("A"+i);
-			 team.setNumberOfEmployees(i+1);
-			 team.setNumberOfEmployeesOnVacation(i);
-			 team.setFormedDate(new Date());
-			 team.setId(i);
-			 team.setCompanyId(i+100);
-			 teams.add(new SelectItem(team.getName(), team.getName()));
-		 }
-		 
-	 }
-
-	private void createEmployees(int number){
-		 for (int i=0; i<number; i++){
-			 Employee emp = new Employee();
-			 
-			 emp.setCompanyId(i+100);
-			 emp.setId(i);
-			 emp.setName("A"+i);
-			 emp.setAssociatedTasks(new LinkedList<String>());
-			 emp.setDaysOff(5+i);
-			 emp.setEndDate(new Date());
-			 emp.setJoinDate(new Date());
-			 emp.setSpecialDaysOff(6);
-			 emp.setTeam("B"+i);
-			 emp.setPendingRequests(new LinkedList<String>());
-			 
-			 
-			 employees.add(emp);
-		 }
-		 
-	 }
 	
-	private void createTasks(int number){
-		 for (int i=0; i<number; i++){
-			 Task task = new Task();
-			 
-			 task.setCompanyId(i+100);
-			 task.setId(i);
-			 task.setCode("T"+i);
-			 task.setName("Task"+i);
-			 task.setDescription("Description"+i);
-			 task.setStartDate(new Date());
-			 task.setEndDate(new Date());
-			 
-			 
-			 tasks.add(new SelectItem(task.getCode(), task.getCode()));
-		 }
-		 
-	 }
 	
 	
 	 
 	 public void remove() {
 		    try {
-		    	System.out.println("Deleting: " + employeeToDelete.getName());
-		        employees.remove(employeeToDelete);
+		    	System.out.println("Deleting: " + employeeToDelete.getEmployee().getName());
+		        new EmployeeController(Application.getInstance().getEntityManagerFactory()).deleteEmployee(employeeToDelete.getEmployee());
+		        
+		        // need to remove from requests
+		        // need to remove from daysOff
+		        // need to remove from specialDaysOff
+		        // need to remove from taskassociations
+		        // need to remove from workedhours
+		        
 		    } catch (Exception e) {
 		        e.printStackTrace();
 		    }
 		}
 	 
 	 public void edit(){
-		 System.out.println("Editing: " + employeeToEdit.getName());
+		 System.out.println("Editing: " + employeeToEdit.getEmployee().getName());
 	 }
 	 
 	 public void save(){
-		
 		 System.out.println("Saving...");
-		 
-		 for (Employee emp : employees) {
-			if(emp.getId()==employeeToEdit.getId()){
-				emp.setName(newName);
-				emp.setTeam(newTeam);
-				emp.setDaysOff(newDaysOff);
-				emp.setSpecialDaysOff(newSpecialDaysOff);
-				emp.setJoinDate(newJoinDate);
-				emp.setEndDate(newEndDate);
-				emp.setAssociatedTasks(newAssociatedTasks);
-				break;
-			}
-		}
-		 
+		 new EmployeeController(Application.getInstance().getEntityManagerFactory()).updateEmployee(employeeIdToEdit, 
+				 	newName, newDaysOff, newSpecialDaysOff, newTeamId, newJoinDate, newEndDate);
 	 }
 	 
 	 public void add(){
-		 System.out.println("Adding team with name: " + employeeToAdd.getName());
-		 for (Employee emp : employees) {
-			if(emp.getName().equals(employeeToAdd.getName())){
-				return;
-			}
-		}
-		employees.add(employeeToAdd);
+		 System.out.println("Adding emp  with name: " + employeeToAdd.getEmployee().getName() + "and id of team: " + employeeToAdd.getEmployee().getTeamId());
+		 
+		 employeeToAdd.getEmployee().setCompanyId(1);
+		 new EmployeeController(Application.getInstance().getEntityManagerFactory()).addEmployee(employeeToAdd.getEmployee());
 	 }
 	 
 	 public void createEmployee(){
 		 System.out.println("Creating employee...");
-		 employeeToAdd = new Employee();
+		 employeeToAdd = new EmployeeWrapper();
+		 employeeToAdd.setEmployee(new Employee());
+		 employeeToAdd.setTeamName("");
+		 employeeToAdd.setTasks(new LinkedList<String>());
 	 }
 	
 	

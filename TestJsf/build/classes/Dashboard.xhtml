@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+		<h:form id="dashboardForm">
+			<p:dataTable var="dash" value="#{dashboardView.dashboards}" paginator="true" rows="10"
+	                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+	                 id="dashTable" lazy="true" paginatorPosition="bottom" async="true" >
+			    <p:column headerText="Team Name">
+			        <h:outputText value="#{dash.name}" />
+			    </p:column>
+			 
+			    <p:column headerText="Number of employees">
+			        <h:outputText value="#{dash.numberOfEmployees}" />
+			    </p:column>
+			 
+			    <p:column headerText="Number of employees on vacation">
+			        <h:outputText value="#{dash.numberOfEmployeesOnVacation}" />
+			    </p:column>
+			    
+			     <p:column headerText="Remaining tasks">
+			        <h:outputText value="#{dash.tasks}" />
+			    </p:column>
+			  
+			</p:dataTable>
+		</h:form>
+	</h:body>
+</html>
