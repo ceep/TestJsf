@@ -123,13 +123,12 @@
             				<f:selectItems value="#{employeesView.teams}" />
 				        </p:selectOneListbox>
 				        
-				       <!--
-				        < p:outputLabel for="tasks" value="Tasks:" />
-				         <p:selectManyMenu id="tasks" value="#{employeesView.employeeToEdit.tasks}" 
+				        <p:outputLabel for="tasks" value="Tasks:" />
+				         <p:selectManyMenu id="tasks" value="#{employeesView.employeeToEdit.newTaskCodes}" 
 				        					style="width:125px">
             				<f:selectItems value="#{employeesView.tasks}" />
 				        </p:selectManyMenu> 
-				        -->
+				      
 			    		
 			    		
 			    		<p:commandButton value="Save" 
@@ -143,10 +142,7 @@
 			    			<f:setPropertyActionListener value="#{employeesView.employeeToEdit.employee.daysOff}" target="#{employeesView.newDaysOff}" />
 			    			<f:setPropertyActionListener value="#{employeesView.employeeToEdit.employee.specialDaysOff}" target="#{employeesView.newSpecialDaysOff}" />
 			    			<f:setPropertyActionListener value="#{employeesView.employeeToEdit.employee.teamId}" target="#{employeesView.newTeamId}" />
-			    			
-			    			<!--
-			    			<f:setPropertyActionListener value="#{employeesView.employeeToEdit.tasks}" target="#{employeesView.newAssociatedTasks}" />
-			    			-->
+			    			<f:setPropertyActionListener value="#{employeesView.employeeToEdit.newTaskCodes}" target="#{employeesView.newTaskCodes}" />
 			    		</p:commandButton>
 		    		</h:panelGrid>
 		    	</p:outputPanel>	
@@ -197,14 +193,14 @@
             				<f:selectItems value="#{employeesView.teams}" />
 				        </p:selectOneListbox>
 			    		
-			    		<!-- 
+			    		
 			    		<p:outputLabel for="tasks" value="Tasks:" />
-				         <p:selectManyMenu id="tasks" value="#{employeesView.employeeToAdd.tasks}" 
+				         <p:selectManyMenu id="tasks" value="#{employeesView.employeeToAdd.taskCodes}" 
 				        					style="width:125px">
             				<f:selectItems value="#{employeesView.tasks}" />
 				        </p:selectManyMenu>
 				        
-				        -->
+				        
 			    		
 			    		
 			    		

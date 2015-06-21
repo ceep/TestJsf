@@ -2,11 +2,13 @@ package hrTool.views;
 
 import hrTool.application.Application;
 import hrTool.controller.EmployeeController;
+import hrTool.controller.TasksAssociationController;
 import hrTool.controller.TasksController;
 import hrTool.controller.TeamController;
 import hrTool.model.Employee;
 import hrTool.model.Request;
 import hrTool.model.Task;
+import hrTool.model.Taskassociation;
 import hrTool.model.Team;
 import hrTool.wrappers.EmployeeWrapper;
 
@@ -25,27 +27,35 @@ import javax.faces.model.SelectItem;
 public class Employees implements Serializable{
 
 	private List <EmployeeWrapper> employees;
-	
-	
-	
+
+
+
 	private EmployeeWrapper employeeToEdit;
 	private EmployeeWrapper employeeToDelete;
 	private EmployeeWrapper employeeToAdd;
-	
+
 	private int employeeIdToEdit;
-	
+
 	private String newName;
 	private int newTeamId;
 	private int newDaysOff;
 	private int newSpecialDaysOff;
 	private Date newJoinDate;
 	private Date newEndDate;
-	private LinkedList <String> newAssociatedTasks;
-	
+	private List <String> newTaskCodes;
+
 	private LinkedList <SelectItem> teams;
 	private LinkedList <SelectItem> tasks;
+
+	
 	
 
+	public List<String> getNewTaskCodes() {
+		return newTaskCodes;
+	}
+	public void setNewTaskCodes(List<String> newTaskCodes) {
+		this.newTaskCodes = newTaskCodes;
+	}
 	public LinkedList<SelectItem> getTasks() {
 		tasks.clear();
 		// need to set the company id
@@ -144,66 +154,91 @@ public class Employees implements Serializable{
 	public void setNewEndDate(Date newEndDate) {
 		this.newEndDate = newEndDate;
 	}
-	public LinkedList<String> getNewAssociatedTasks() {
-		return newAssociatedTasks;
-	}
-	public void setNewAssociatedTasks(LinkedList<String> newAssociatedTasks) {
-		this.newAssociatedTasks = newAssociatedTasks;
-	}
 	
-	
+
 	@PostConstruct
-    public void init() {
-	 	employees = new LinkedList<EmployeeWrapper>();
-	 	teams=new LinkedList<SelectItem>();
-	 	tasks = new LinkedList<SelectItem>();
-        System.out.println("Employees INIT...");
-    }
-	
-	
-	
-	
-	 
-	 public void remove() {
-		    try {
-		    	System.out.println("Deleting: " + employeeToDelete.getEmployee().getName());
-		        new EmployeeController(Application.getInstance().getEntityManagerFactory()).deleteEmployee(employeeToDelete.getEmployee());
-		        
-		        // need to remove from requests
-		        // need to remove from daysOff
-		        // need to remove from specialDaysOff
-		        // need to remove from taskassociations
-		        // need to remove from workedhours
-		        
-		    } catch (Exception e) {
-		        e.printStackTrace();
-		    }
+	public void init() {
+		employees = new LinkedList<EmployeeWrapper>();
+		teams=new LinkedList<SelectItem>();
+		tasks = new LinkedList<SelectItem>();
+		System.out.println("Employees INIT...");
+	}
+
+
+
+
+
+	public void remove() {
+		try {
+			System.out.println("Deleting: " + employeeToDelete.getEmployee().getName());
+			new EmployeeController(Application.getInstance().getEntityManagerFactory()).deleteEmployee(employeeToDelete.getEmployee());
+
+			// need to remove from requests
+			// need to remove from daysOff
+			// need to remove from specialDaysOff
+			// need to remove from taskassociations
+			for (Taskassociation ta : new TasksAssociationController(Application.getInstance().getEntityManagerFactory()).getTasksByEmployee(employeeToDelete.getEmployee().getEmployeeId())) {
+				new TasksAssociationController(Application.getInstance().getEntityManagerFactory()).deleteTaskAssoc(ta);
+			}
+			// need to remove from workedhours
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-	 
-	 public void edit(){
-		 System.out.println("Editing: " + employeeToEdit.getEmployee().getName());
-	 }
-	 
-	 public void save(){
-		 System.out.println("Saving...");
-		 new EmployeeController(Application.getInstance().getEntityManagerFactory()).updateEmployee(employeeIdToEdit, 
-				 	newName, newDaysOff, newSpecialDaysOff, newTeamId, newJoinDate, newEndDate);
-	 }
-	 
-	 public void add(){
-		 System.out.println("Adding emp  with name: " + employeeToAdd.getEmployee().getName() + "and id of team: " + employeeToAdd.getEmployee().getTeamId());
-		 
-		 employeeToAdd.getEmployee().setCompanyId(1);
-		 new EmployeeController(Application.getInstance().getEntityManagerFactory()).addEmployee(employeeToAdd.getEmployee());
-	 }
-	 
-	 public void createEmployee(){
-		 System.out.println("Creating employee...");
-		 employeeToAdd = new EmployeeWrapper();
-		 employeeToAdd.setEmployee(new Employee());
-		 employeeToAdd.setTeamName("");
-		 employeeToAdd.setTasks(new LinkedList<String>());
-	 }
-	
-	
+	}
+
+	public void edit(){
+		System.out.println("Editing: " + employeeToEdit.getEmployee().getName());
+		newTaskCodes = new LinkedList<String>();
+		employeeToEdit.setNewTaskCodes(new LinkedList<String>());
+	}
+
+	public void save(){
+		System.out.println("Saving...");
+		new EmployeeController(Application.getInstance().getEntityManagerFactory()).updateEmployee(employeeIdToEdit, 
+				newName, newDaysOff, newSpecialDaysOff, newTeamId, newJoinDate, newEndDate);
+		
+		// need to update tasksAssociations by deleting existing task associations and adding the correct ones
+		for (Taskassociation ta : new TasksAssociationController(Application.getInstance().getEntityManagerFactory()).getTasksByEmployee(employeeToEdit.getEmployee().getEmployeeId())) {
+			new TasksAssociationController(Application.getInstance().getEntityManagerFactory()).deleteTaskAssoc(ta);
+		}
+
+		for (String code : newTaskCodes) {
+			Taskassociation ta = new Taskassociation();
+			ta.setCompanyId(employeeToEdit.getEmployee().getCompanyId());
+			ta.setEmployeeId(employeeToEdit.getEmployee().getEmployeeId());
+			ta.setTaskId(Integer.parseInt(code));
+			new TasksAssociationController(Application.getInstance().getEntityManagerFactory()).addTaskAssociation(ta);
+		}
+
+	}
+
+	public void add(){
+		System.out.println("Adding emp  with name: " + employeeToAdd.getEmployee().getName() + "and id of team: " + employeeToAdd.getEmployee().getTeamId());
+		// need to set company id
+		employeeToAdd.getEmployee().setCompanyId(1);
+		new EmployeeController(Application.getInstance().getEntityManagerFactory()).addEmployee(employeeToAdd.getEmployee());
+
+		List <String>	taskCodes = employeeToAdd.getTaskCodes(); 
+
+		for (String code : taskCodes) {
+			Taskassociation ta = new Taskassociation();
+			ta.setCompanyId(employeeToAdd.getEmployee().getCompanyId());
+			ta.setEmployeeId(employeeToAdd.getEmployee().getEmployeeId());
+			ta.setTaskId(Integer.parseInt(code));
+			new TasksAssociationController(Application.getInstance().getEntityManagerFactory()).addTaskAssociation(ta);
+		}
+
+	}
+
+	public void createEmployee(){
+		System.out.println("Creating employee...");
+		employeeToAdd = new EmployeeWrapper();
+		employeeToAdd.setEmployee(new Employee());
+		employeeToAdd.setTeamName("");
+		employeeToAdd.setTasks(new LinkedList<String>());
+		employeeToAdd.setTaskCodes(new LinkedList<String>());
+	}
+
+
 }

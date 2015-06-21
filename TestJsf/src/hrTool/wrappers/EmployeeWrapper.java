@@ -22,7 +22,29 @@ public class EmployeeWrapper implements Serializable{
 	private int requests;
 	
 	private List <String> tasks;
+	private List <String> taskCodes;
+	private List <String> newTaskCodes;
 	
+	public List<String> getNewTaskCodes() {
+		return newTaskCodes;
+	}
+
+
+	public void setNewTaskCodes(List<String> newTaskCodes) {
+		this.newTaskCodes = newTaskCodes;
+	}
+
+
+	public List<String> getTaskCodes() {
+		return taskCodes;
+	}
+
+
+	public void setTaskCodes(List<String> taskCodes) {
+		this.taskCodes = taskCodes;
+	}
+
+
 	public EmployeeWrapper(){
 		tasks = new LinkedList<String>();
 	}
