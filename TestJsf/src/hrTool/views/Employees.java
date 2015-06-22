@@ -1,10 +1,14 @@
 package hrTool.views;
 
 import hrTool.application.Application;
+import hrTool.controller.DaysOffController;
 import hrTool.controller.EmployeeController;
+import hrTool.controller.RequestsController;
+import hrTool.controller.SpecialDaysOffController;
 import hrTool.controller.TasksAssociationController;
 import hrTool.controller.TasksController;
 import hrTool.controller.TeamController;
+import hrTool.controller.WorkedHoursController;
 import hrTool.model.Employee;
 import hrTool.model.Request;
 import hrTool.model.Task;
@@ -174,13 +178,17 @@ public class Employees implements Serializable{
 			new EmployeeController(Application.getInstance().getEntityManagerFactory()).deleteEmployee(employeeToDelete.getEmployee());
 
 			// need to remove from requests
+			new RequestsController(Application.getInstance().getEntityManagerFactory()).deleteRequestsByEmployee(employeeToDelete.getEmployee().getEmployeeId());
 			// need to remove from daysOff
+			new DaysOffController(Application.getInstance().getEntityManagerFactory()).deleteDaysOffForEmployee(employeeToDelete.getEmployee().getEmployeeId());
 			// need to remove from specialDaysOff
+			new SpecialDaysOffController(Application.getInstance().getEntityManagerFactory()).deleteDaysOffForEmployee(employeeToDelete.getEmployee().getEmployeeId());
 			// need to remove from taskassociations
 			for (Taskassociation ta : new TasksAssociationController(Application.getInstance().getEntityManagerFactory()).getTasksByEmployee(employeeToDelete.getEmployee().getEmployeeId())) {
 				new TasksAssociationController(Application.getInstance().getEntityManagerFactory()).deleteTaskAssoc(ta);
 			}
 			// need to remove from workedhours
+			new WorkedHoursController(Application.getInstance().getEntityManagerFactory()).deleteWorkedHoursForEmployee(employeeToDelete.getEmployee().getEmployeeId());
 
 		} catch (Exception e) {
 			e.printStackTrace();

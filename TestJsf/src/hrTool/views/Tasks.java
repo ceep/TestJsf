@@ -6,7 +6,6 @@ import hrTool.controller.TasksController;
 import hrTool.controller.TeamController;
 import hrTool.controller.WorkedHoursController;
 import hrTool.model.Task;
-import hrTool.model.Taskassociation;
 import hrTool.model.Team;
 
 import java.io.Serializable;

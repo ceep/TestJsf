@@ -57,8 +57,30 @@ public class WorkedHoursController {
 			t.persist(workedHour);
 			t.getTransaction().commit();
 		}
+		
+		
+		// delete the worked hours for a certain employee
+		public void deleteWorkedHoursForEmployee(int employeeId) {
+			
+			List <Workedhour> result = new LinkedList<Workedhour>();
+			EntityManager em = getEntityManager();
+			CriteriaBuilder cb = em.getCriteriaBuilder();
+			CriteriaQuery cq = cb.createQuery();
+			Root <Workedhour> rt = cq.from(Workedhour.class);
+			cq.where(
+					cb.equal(rt.get("employeeId"), employeeId)
+					);
+			Query q = em.createQuery(cq);
+
+			result =  q.getResultList();
+			
+			for (Workedhour hours : result) {
+				delete(hours);
+			}
+				  
+		}
 	
-		// deletes a task association
+		// deletes the worked hours for a certain task
 		public void deleteWorkedHours(int taskId) {
 			
 			List <Workedhour> result = new LinkedList<Workedhour>();
@@ -73,34 +95,22 @@ public class WorkedHoursController {
 
 			result =  q.getResultList();
 			
-			for (Workedhour taskassociation : result) {
-				deleteTaskAssoc(taskassociation);
+			for (Workedhour hours : result) {
+				delete(hours);
 			}
 				  
 		}
 		
-		public void deleteTaskAssoc(Workedhour taskToDelete) {
+		public void delete(Workedhour hours) {
 			EntityManager t = getEntityManager();
 
-			Workedhour task= t.find(Workedhour.class, taskToDelete.getId());
+			Workedhour task= t.find(Workedhour.class, hours.getId());
 
 			t.getTransaction().begin();
 			t.remove(task);
 			t.getTransaction().commit();
 		}
 
-		// updates a task association
-		public void updateTaskAssociation(int id, int employeeId, int taskId){
-
-			EntityManager em = getEntityManager();
-			Taskassociation t = em.find(Taskassociation.class, id);
-
-			em.getTransaction().begin();
-
-			t.setEmployeeId(employeeId);
-			t.setTaskId(taskId);
-
-			em.getTransaction().commit();
-		}
+		
 
 }

@@ -1,9 +1,7 @@
 package hrTool.controller;
 
 import hrTool.model.Request;
-import hrTool.model.Task;
 
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -44,6 +42,35 @@ public class RequestsController {
 		}
 	
 
+		public void deleteRequestsByEmployee(int employeeId){
+
+			List <Request> result = new LinkedList<Request>();
+			
+			EntityManager em = getEntityManager();
+			CriteriaBuilder cb = em.getCriteriaBuilder();
+			CriteriaQuery cq = cb.createQuery();
+			Root <Request> rt = cq.from(Request.class);
+			cq.where(
+					cb.equal(rt.get("employeeId"), employeeId)
+					);
+			Query q = em.createQuery(cq);
+
+			result = q.getResultList();
+			
+			for (Request req : result) {
+				delete(req);
+			}
+		}
 	
 
+		public void delete(Request req) {
+			EntityManager t = getEntityManager();
+
+			Request request= t.find(Request.class, req.getId());
+
+			t.getTransaction().begin();
+			t.remove(request);
+			t.getTransaction().commit();
+		}
+		
 }
