@@ -1,6 +1,8 @@
 package hrTool.views;
 
 import hrTool.application.Application;
+import hrTool.controller.EmployeeController;
+import hrTool.controller.TasksController;
 import hrTool.controller.TeamController;
 import hrTool.model.Team;
 import hrTool.wrappers.TeamWrapper;
@@ -108,8 +110,9 @@ public class Teams implements Serializable{
 			
 			// need to delete from other tables the reference to that team
 			// employee
+			new EmployeeController(Application.getInstance().getEntityManagerFactory()).setTeamIdForEmployeesInTeam(teamToDelete.getTeam().getTeamId());
 			// task
-			
+			new TasksController(Application.getInstance().getEntityManagerFactory()).setTeamIdForTask(teamToDelete.getTeam().getTeamId());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

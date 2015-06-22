@@ -139,4 +139,29 @@ public class TasksController {
 			return result.get(0).getCode();
 		}
 
+		public void setTeamIdForTask(int teamId){
+			List <Task> result = new LinkedList<Task>();
+			EntityManager em = getEntityManager();
+			CriteriaBuilder cb = em.getCriteriaBuilder();
+			CriteriaQuery cq = cb.createQuery();
+			Root <Task> rt = cq.from(Task.class);
+			cq.where(
+					cb.equal(rt.get("teamId"), teamId)
+					);
+			Query q = em.createQuery(cq);
+
+			result =  q.getResultList();
+			
+			for (Task task : result) {
+				Task t = em.find(Task.class, task.getTaskId());
+
+				em.getTransaction().begin();
+
+				t.setTeamId(-1);
+
+				em.getTransaction().commit();
+			}
+			
+		}
+		
 }

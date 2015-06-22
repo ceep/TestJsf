@@ -57,7 +57,11 @@ public class EmployeeWrapper implements Serializable{
 		this.employee = employee;
 	}
 	public String getTeamName() {
-		teamName = new TeamController(Application.getInstance().getEntityManagerFactory()).getTeam(employee.getTeamId()).getName();
+		
+		if(employee.getTeamId()!=-1)
+			teamName = new TeamController(Application.getInstance().getEntityManagerFactory()).getTeam(employee.getTeamId()).getName();
+		else
+			teamName = "None";
 		return teamName;
 	}
 	public void setTeamName(String teamName) {

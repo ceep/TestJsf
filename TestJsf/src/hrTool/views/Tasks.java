@@ -103,7 +103,10 @@ public class Tasks implements Serializable{
 		for (Task task : tasksList) {
 			TaskWrapper tr = new TaskWrapper();
 			tr.setTask(task);
-			tr.setTeamName(new TeamController(Application.getInstance().getEntityManagerFactory()).getTeam(task.getTeamId()).getName());
+			if(task.getTeamId()!=-1)
+				tr.setTeamName(new TeamController(Application.getInstance().getEntityManagerFactory()).getTeam(task.getTeamId()).getName());
+			else
+				tr.setTeamName("None");
 			tasks.add(tr);
 		}
 

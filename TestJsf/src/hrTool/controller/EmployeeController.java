@@ -142,5 +142,30 @@ public class EmployeeController {
 
 		em.getTransaction().commit();
 	}
+	
+	
+	public void setTeamIdForEmployeesInTeam (int teamId){
+		List <Employee> result = new LinkedList<Employee>();
+
+		EntityManager em = getEntityManager();
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery cq = cb.createQuery();
+		Root <Employee> rt = cq.from(Employee.class);
+		cq.where(
+				cb.equal(rt.get("teamId"), teamId)
+				);
+		Query q = em.createQuery(cq);
+
+		result =  q.getResultList();
+		
+		for (Employee employee : result) {
+			Employee emp = em.find(Employee.class, employee.getEmployeeId());
+			em.getTransaction().begin();
+			emp.setTeamId(-1);
+			em.getTransaction().commit();
+		}
+		
+		
+	}
 
 }
