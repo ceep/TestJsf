@@ -188,7 +188,7 @@ public class Employees implements Serializable{
 				new TasksAssociationController(Application.getInstance().getEntityManagerFactory()).deleteTaskAssoc(ta);
 			}
 			// need to remove from workedhours
-			new WorkedHoursController(Application.getInstance().getEntityManagerFactory()).deleteWorkedHoursForEmployee(employeeToDelete.getEmployee().getEmployeeId());
+			//new WorkedHoursController(Application.getInstance().getEntityManagerFactory()).deleteWorkedHoursForEmployee(employeeToDelete.getEmployee().getEmployeeId());
 
 		} catch (Exception e) {
 			e.printStackTrace();
