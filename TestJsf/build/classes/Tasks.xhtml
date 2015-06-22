@@ -7,31 +7,35 @@
 	<h:body>
 	
 		<h:form id="tasksTableForm" >
-			<p:dataTable var="task" value="#{tasksView.tasks}" paginator="true" rows="10"
+			<p:dataTable var="taskWrapper" value="#{tasksView.tasks}" paginator="true" rows="10"
 	                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
 	                 id="tasksTable" lazy="true" paginatorPosition="bottom" async="true" >
 			    <p:column headerText="Code">
-			        <h:outputText value="#{task.code}" />
+			        <h:outputText value="#{taskWrapper.task.code}" />
 			    </p:column>
 			    
 			    <p:column headerText="Name">
-			        <h:outputText value="#{task.name}" />
+			        <h:outputText value="#{taskWrapper.task.name}" />
 			    </p:column>
 			 
 			    <p:column headerText="Description">
-			        <h:outputText value="#{task.description}" />
+			        <h:outputText value="#{taskWrapper.task.description}" />
 			    </p:column>
-			    
+
+				<p:column headerText="Assigned to">
+			        <h:outputText value="#{taskWrapper.teamName}" />
+			    </p:column>
+
 			     <p:column headerText="Total Hours">
-			        <h:outputText value="#{task.totalHours}" />
+			        <h:outputText value="#{taskWrapper.task.totalHours}" />
 			    </p:column>
 			 
 			    <p:column headerText="Start date">
-			        <h:outputText value="#{task.startDate}" />
+			        <h:outputText value="#{taskWrapper.task.startDate}" />
 			    </p:column>
 			    
 			     <p:column headerText="End date">
-			        <h:outputText value="#{task.endDate}" />
+			        <h:outputText value="#{taskWrapper.task.endDate}" />
 			    </p:column>
 			    
 			    <p:column style="width:65px" headerText="Actions">
@@ -41,14 +45,14 @@
 	                        onclick="PF('editTaskRowDialog').show()"     
 	                        update="dialogForm:documentPanel" 
 	                        >
-	                    <f:setPropertyActionListener value="#{task}" target="#{tasksView.taskToEdit}" />
-	                    <f:setPropertyActionListener value="#{task.taskId}" target="#{tasksView.taskIdToEdit}" />
+	                    <f:setPropertyActionListener value="#{taskWrapper}" target="#{tasksView.taskToEdit}" />
+	                    <f:setPropertyActionListener value="#{taskWrapper.task.taskId}" target="#{tasksView.taskIdToEdit}" />
 	                </p:commandButton>      
 			    	<p:commandButton icon="ui-icon-trash"
 	                        title="Delete this task"
 	                        action="#{tasksView.remove}"
 	                        update="tasksTableForm:tasksTable">
-	               		<f:setPropertyActionListener value="#{task}" target="#{tasksView.taskToDelete}" />
+	               		<f:setPropertyActionListener value="#{taskWrapper}" target="#{tasksView.taskToDelete}" />
 	                </p:commandButton>
 			    </p:column>
 			</p:dataTable>
@@ -71,27 +75,35 @@
 				<p:outputPanel id="documentPanel">
             		<h:panelGrid columns="2" columnClasses="label, value">
 				         <p:outputLabel value="New Code:" /> 
-				        <p:inputText value="#{tasksView.taskToEdit.code}" required="true" requiredMessage="Please provide at least a character for the code of the Task." maxlength="5"/>
+				        <p:inputText value="#{tasksView.taskToEdit.task.code}" required="true" requiredMessage="Please provide at least a character for the code of the Task." maxlength="5"/>
 				        
 				        <p:outputLabel value="New Name:" /> 
-				        <p:inputText value="#{tasksView.taskToEdit.name}" required="true" requiredMessage="Please provide at least a character for the name of the Task." maxlength="20"/>
+				        <p:inputText value="#{tasksView.taskToEdit.task.name}" required="true" requiredMessage="Please provide at least a character for the name of the Task." maxlength="20"/>
 			    		
 			    		
 			    		<p:outputLabel value="New Description:" /> 
-				        <p:inputText value="#{tasksView.taskToEdit.description}" required="false"/>
+				        <p:inputText value="#{tasksView.taskToEdit.task.description}" required="false"/>
 				        
 				        <p:outputLabel value="New Number of Hours" /> 
-				        <p:inputText value="#{tasksView.taskToEdit.totalHours}" required="true"/>
+				        <p:inputText value="#{tasksView.taskToEdit.task.totalHours}" required="true"/>
+				        
+				        <p:outputLabel for="team" value="New Team:" />
+				        <p:selectOneListbox id="team" value="#{tasksView.taskToEdit.task.teamId}" 
+				        					style="width:125px" 
+				        					required="true" scrollHeight="50"
+				        					requiredMessage="Please provide a team.">
+            				<f:selectItems value="#{tasksView.teams}" />
+				        </p:selectOneListbox>
 			    		
 			    		<p:outputLabel value="New Start date:" for="date"/> 
 			    		<p:calendar id="date" 
-			    					value="#{tasksView.taskToEdit.startDate}"
+			    					value="#{tasksView.taskToEdit.task.startDate}"
 			    					effect="fold" required="true" requiredMessage="Please choose a start date."/>
 			    		
 			    		
 			    		<p:outputLabel value="New End date:" for="date2"/> 
 			    		<p:calendar id="date2" 
-			    					value="#{tasksView.taskToEdit.endDate}"
+			    					value="#{tasksView.taskToEdit.task.endDate}"
 			    					effect="fold" required="true" requiredMessage="Please choose an end date."/>
 			    		
 			    		<p:commandButton value="Save" 
@@ -99,13 +111,14 @@
 			    						 onclick="PF('editTaskRowDialog').hide()" 
 			    						 update="tasksTableForm:tasksTable"
 			    						 async="true">
-			    			<f:setPropertyActionListener value="#{tasksView.taskToEdit.taskId}" target="#{tasksView.taskIdToEdit}" />
-			    			<f:setPropertyActionListener value="#{tasksView.taskToEdit.name}" target="#{tasksView.newName}" />
-			    			<f:setPropertyActionListener value="#{tasksView.taskToEdit.startDate}" target="#{tasksView.newStartDate}" />
-			    			<f:setPropertyActionListener value="#{tasksView.taskToEdit.endDate}" target="#{tasksView.newEndDate}" />
-			    			<f:setPropertyActionListener value="#{tasksView.taskToEdit.description}" target="#{tasksView.newDescription}" />
-			    			<f:setPropertyActionListener value="#{tasksView.taskToEdit.code}" target="#{tasksView.newCode}" />
-			    			<f:setPropertyActionListener value="#{tasksView.taskToEdit.totalHours}" target="#{tasksView.newTotalHours}" />
+			    			<f:setPropertyActionListener value="#{tasksView.taskToEdit.task.taskId}" target="#{tasksView.taskIdToEdit}" />
+			    			<f:setPropertyActionListener value="#{tasksView.taskToEdit.task.name}" target="#{tasksView.newName}" />
+			    			<f:setPropertyActionListener value="#{tasksView.taskToEdit.task.startDate}" target="#{tasksView.newStartDate}" />
+			    			<f:setPropertyActionListener value="#{tasksView.taskToEdit.task.endDate}" target="#{tasksView.newEndDate}" />
+			    			<f:setPropertyActionListener value="#{tasksView.taskToEdit.task.description}" target="#{tasksView.newDescription}" />
+			    			<f:setPropertyActionListener value="#{tasksView.taskToEdit.task.code}" target="#{tasksView.newCode}" />
+			    			<f:setPropertyActionListener value="#{tasksView.taskToEdit.task.totalHours}" target="#{tasksView.newTotalHours}" />
+			    			<f:setPropertyActionListener value="#{tasksView.taskToEdit.task.teamId}" target="#{tasksView.newTeamId}" />
 			    		</p:commandButton>
 		    		</h:panelGrid>
 		    	</p:outputPanel>	
@@ -118,20 +131,20 @@
             		<h:panelGrid columns="2" columnClasses="label, value">
 				        
 				        <p:outputLabel value="Code:" /> 
-				        <p:inputText value="#{tasksView.taskToAdd.code}" required="true" requiredMessage="Please provide at least a character for the code of the Task." maxlength="5"/>
+				        <p:inputText value="#{tasksView.taskToAdd.task.code}" required="true" requiredMessage="Please provide at least a character for the code of the Task." maxlength="5"/>
 				        
 				        <p:outputLabel value="Name:" /> 
-				        <p:inputText value="#{tasksView.taskToAdd.name}" required="true" requiredMessage="Please provide at least a character for the name of the Task." maxlength="20"/>
+				        <p:inputText value="#{tasksView.taskToAdd.task.name}" required="true" requiredMessage="Please provide at least a character for the name of the Task." maxlength="20"/>
 			    		
 			    		
 			    		<p:outputLabel value="Description:" /> 
-				        <p:inputText value="#{tasksView.taskToAdd.description}" required="false"/>
+				        <p:inputText value="#{tasksView.taskToAdd.task.description}" required="false"/>
 				        
 				        <p:outputLabel value="Number of Hours" /> 
-				        <p:inputText value="#{tasksView.taskToAdd.totalHours}" required="true"/>
+				        <p:inputText value="#{tasksView.taskToAdd.task.totalHours}" required="true"/>
 				        
 				        <p:outputLabel for="team" value="Team:" />
-				        <p:selectOneListbox id="team" value="#{tasksView.taskToAdd.teamId}" 
+				        <p:selectOneListbox id="team" value="#{tasksView.taskToAdd.task.teamId}" 
 				        					style="width:125px" 
 				        					required="true" scrollHeight="50"
 				        					requiredMessage="Please provide a team.">
@@ -140,13 +153,13 @@
 			    		
 			    		<p:outputLabel value="Start date:" for="date"/> 
 			    		<p:calendar id="date" 
-			    					value="#{tasksView.taskToAdd.startDate}"
+			    					value="#{tasksView.taskToAdd.task.startDate}"
 			    					effect="fold" required="true" requiredMessage="Please choose a start date."/>
 			    		
 			    		
 			    		<p:outputLabel value="End date:" for="date2"/> 
 			    		<p:calendar id="date2" 
-			    					value="#{tasksView.taskToAdd.endDate}"
+			    					value="#{tasksView.taskToAdd.task.endDate}"
 			    					effect="fold" required="true" requiredMessage="Please choose an end date."/>
 			    		
 			    		

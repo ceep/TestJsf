@@ -1,35 +1,48 @@
 package hrTool.views;
 
-import hrTool.beans.Team;
+import hrTool.application.Application;
+import hrTool.controller.TeamController;
+import hrTool.model.Team;
+import hrTool.wrappers.TeamWrapper;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 
 @ManagedBean(name="teamsView")
 @ViewScoped
 public class Teams implements Serializable{
 
-	private LinkedList <Team> teams;
-	private Team teamToEdit;
-	private Team teamToDelete;
-	private Team teamToAdd;
-	
+	private LinkedList <TeamWrapper> teams;
+	private TeamWrapper teamToEdit;
+	private TeamWrapper teamToDelete;
+	private TeamWrapper teamToAdd;
+
 	private int teamIdToEdit;
 	private String newName;
+	private Date newformedDate;
+	
+	
 
 
-	public Team getTeamToAdd() {
+	public Date getNewformedDate() {
+		return newformedDate;
+	}
+
+	public void setNewformedDate(Date newformedDate) {
+		this.newformedDate = newformedDate;
+	}
+
+	public TeamWrapper getTeamToAdd() {
 		return teamToAdd;
 	}
 
-	public void setTeamToAdd(Team teamToAdd) {
+	public void setTeamToAdd(TeamWrapper teamToAdd) {
 		this.teamToAdd = teamToAdd;
 	}
 
@@ -49,94 +62,86 @@ public class Teams implements Serializable{
 		this.teamIdToEdit = teamIdToEdit;
 	}
 
-	public Team getTeamToDelete() {
+	public TeamWrapper getTeamToDelete() {
 		return teamToDelete;
 	}
 
-	public void setTeamToDelete(Team teamToDelete) {
+	public void setTeamToDelete(TeamWrapper teamToDelete) {
 		this.teamToDelete = teamToDelete;
 	}
 
-	public Team getTeamToEdit() {
+	public TeamWrapper getTeamToEdit() {
 		return teamToEdit;
 	}
 
-	public void setTeamToEdit(Team teamToEdit) {
+	public void setTeamToEdit(TeamWrapper teamToEdit) {
 		this.teamToEdit = teamToEdit;
 	}
 
-	public LinkedList<Team> getTeams() {
-		System.out.println("Getting teams...");
+	public LinkedList<TeamWrapper> getTeams() {
+
+		teams.clear();
+		// need to set the company
+		List <Team> temp = new TeamController(Application.getInstance().getEntityManagerFactory()).getTeamsByCompany(1);
+		for (Team team : temp) {
+			TeamWrapper tr = new TeamWrapper();
+			tr.setTeam(team);
+			teams.add(tr);
+		}
 		return teams;
 	}
 
-	public void setTeams(LinkedList<Team> teams) {
+	public void setTeams(LinkedList<TeamWrapper> teams) {
 		this.teams = teams;
 	}
-	
-	 @PostConstruct
-	    public void init() {
-		 	teams = new LinkedList<Team>();
-	        createTeams(5);
-	        System.out.println("Teams INIT...");
-	    }
-	
-	 private void createTeams(int number){
-		 for (int i=0; i<number; i++){
-			 Team team = new Team();
-			 team.setName("A"+i);
-			 team.setNumberOfEmployees(i+1);
-			 team.setNumberOfEmployeesOnVacation(i);
-			 team.setFormedDate(new Date());
-			 team.setId(i);
-			 team.setCompanyId(i+100);
-			 teams.add(team);
-		 }
-		 
-	 }
-	 
-	 public void remove() {
-		    try {
-		    	System.out.println("Deleting: " + teamToDelete.getName());
-		        teams.remove(teamToDelete);
-		    } catch (Exception e) {
-		        e.printStackTrace();
-		    }
+
+	@PostConstruct
+	public void init() {
+		teams = new LinkedList<TeamWrapper>();
+		System.out.println("Teams INIT...");
+	}
+
+	public void remove() {
+		try {
+			System.out.println("Deleting: " + teamToDelete.getTeam().getName());
+			new TeamController(Application.getInstance().getEntityManagerFactory()).deleteTeam(teamToDelete.getTeam());
+			
+			// need to delete from other tables the reference to that team
+			// employee
+			// task
+			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-	 
-	 public void edit(){
-		 System.out.println("Editing: " + teamToEdit.getName());
-	 }
-	 
-	 public void save(){
+	}
+
+	public void edit(){
+		System.out.println("Editing: " + teamToEdit.getTeam().getName());
+	}
+
+	public void save(){
+
+		System.out.println("Saving...");
+
+		new TeamController(Application.getInstance().getEntityManagerFactory()).updateTeam(teamIdToEdit, newName, newformedDate);
+
+
+	}
+
+	public void add(){
+		System.out.println("Adding team with name: " + teamToAdd.getTeam().getName());
+		//need to set company Id
+		teamToAdd.getTeam().setCompanyId(1);
 		
-		 System.out.println("Saving...");
-		 
-		 for (Team team : teams) {
-			if(team.getId()==teamIdToEdit){
-				team.setName(newName);
-				break;
-			}
-		}
-		 
-	 }
-	 
-	 public void add(){
-		 System.out.println("Adding team with name: " + teamToAdd.getName());
-		 for (Team team : teams) {
-			if(team.getName().equals(teamToAdd.getName())){
-				FacesContext context = FacesContext.getCurrentInstance();
-		        context.addMessage(null, new FacesMessage("Error",  "Name already exists") );
-				return;
-			}
-		}
-		teams.add(teamToAdd);
-	 }
-	 
-	 public void createTeam(){
-		 System.out.println("Creating team...");
-		 teamToAdd = new Team();
-	 }
-	 
-	
+		new TeamController(Application.getInstance().getEntityManagerFactory()).addTeam(teamToAdd.getTeam());
+		
+	}
+
+	public void createTeam(){
+		System.out.println("Creating team...");
+		teamToAdd = new TeamWrapper();
+		teamToAdd.setTeam(new Team());
+	}
+
+
 }

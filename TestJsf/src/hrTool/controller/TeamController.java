@@ -57,7 +57,7 @@ public class TeamController {
 		}
 	
 		// deletes a team
-		public void deleteTask(Team teamToDelete) {
+		public void deleteTeam(Team teamToDelete) {
 			EntityManager t = getEntityManager();
 
 			Team team= t.find(Team.class, teamToDelete.getTeamId());
@@ -67,8 +67,8 @@ public class TeamController {
 			t.getTransaction().commit();
 		}
 
-		// updates an employee if we know the employee ID
-		public void updateTask(int teamId, String name, Date formedDate){
+		// updates a team if we know the team ID
+		public void updateTeam(int teamId, String name, Date formedDate){
 
 			EntityManager em = getEntityManager();
 			Team t = em.find(Team.class, teamId);

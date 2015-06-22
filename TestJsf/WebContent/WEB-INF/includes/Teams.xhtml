@@ -10,19 +10,19 @@
 	<h:body>
 	
 		<h:form id="teamsTableForm" >
-			<p:dataTable var="team" value="#{teamsView.teams}" paginator="true" rows="10"
+			<p:dataTable var="teamWrapper" value="#{teamsView.teams}" paginator="true" rows="10"
 	                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
 	                 id="teamTable" lazy="true" paginatorPosition="bottom" async="true" >
 			    <p:column headerText="Team Name">
-			        <h:outputText value="#{team.name}" />
+			        <h:outputText value="#{teamWrapper.team.name}" />
 			    </p:column>
 			 
 			    <p:column headerText="Number of employees">
-			        <h:outputText value="#{team.numberOfEmployees}" />
+			        <h:outputText value="#{teamWrapper.numberOfEmployees}" />
 			    </p:column>
 			 
 			     <p:column headerText="Formed on">
-			        <h:outputText value="#{team.formedDate}" />
+			        <h:outputText value="#{teamWrapper.team.formedDate}" />
 			    </p:column>
 			    
 			    <p:column style="width:65px" headerText="Actions">
@@ -32,14 +32,14 @@
 	                        onclick="PF('editRowDialog').show()"     
 	                        update="dialogForm:documentPanel" 
 	                        >
-	                    <f:setPropertyActionListener value="#{team}" target="#{teamsView.teamToEdit}" />
-	                    <f:setPropertyActionListener value="#{team.id}" target="#{teamsView.teamIdToEdit}" />
+	                    <f:setPropertyActionListener value="#{teamWrapper}" target="#{teamsView.teamToEdit}" />
+	                    <f:setPropertyActionListener value="#{teamWrapper.team.teamId}" target="#{teamsView.teamIdToEdit}" />
 	                </p:commandButton>      
 			    	<p:commandButton icon="ui-icon-trash"
 	                        title="Delete this team"
 	                        action="#{teamsView.remove}"
 	                        update="teamsTableForm:teamTable">
-	               		<f:setPropertyActionListener value="#{team}" target="#{teamsView.teamToDelete}" />
+	               		<f:setPropertyActionListener value="#{teamWrapper}" target="#{teamsView.teamToDelete}" />
 	                </p:commandButton>
 			    </p:column>
 			</p:dataTable>
@@ -57,18 +57,23 @@
 			</h:panelGroup>
 		</h:form>
 		
-		<p:dialog id="dialog" header="Edit Name" widgetVar="editRowDialog" modal="true" showEffect="explode" hideEffect="fade" resizable="false">
+		<p:dialog id="dialog" header="Edit Team" widgetVar="editRowDialog" modal="true" showEffect="explode" hideEffect="fade" resizable="false">
 			<h:form id="dialogForm">
 				<p:outputPanel id="documentPanel">
             		<h:panelGrid columns="2" columnClasses="label, value">
 				        <p:outputLabel value="New Name:" /> 
-				        <p:inputText value="#{teamsView.teamToEdit.name}" required="true" requiredMessage="Please provide at least a character for the name of the Team." maxlength="20"/>
+				        <p:inputText value="#{teamsView.teamToEdit.team.name}" required="true" requiredMessage="Please provide at least a character for the name of the Team." maxlength="20"/>
+			    		<p:outputLabel value="New formed date:" for="date"/> 
+			    		<p:calendar id="date" 
+			    					value="#{teamsView.teamToEdit.team.formedDate}"
+			    					effect="fold" required="true" requiredMessage="Please choose a date."/>
 			    		<p:commandButton value="Save" 
 			    						 action="#{teamsView.save}" 
 			    						 onclick="PF('editRowDialog').hide()" 
 			    						 update="teamsTableForm:teamTable"
 			    						 async="true">
-			    			<f:setPropertyActionListener value="#{teamsView.teamToEdit.name}" target="#{teamsView.newName}" />
+			    			<f:setPropertyActionListener value="#{teamsView.teamToEdit.team.name}" target="#{teamsView.newName}" />
+			    			<f:setPropertyActionListener value="#{teamsView.teamToEdit.team.formedDate}" target="#{teamsView.newformedDate}" />
 			    		</p:commandButton>
 		    		</h:panelGrid>
 		    	</p:outputPanel>	
@@ -80,11 +85,11 @@
 				<p:outputPanel id="documentPanel">
             		<h:panelGrid columns="2" columnClasses="label, value">
 				        <p:outputLabel value="Name:" /> 
-				        <p:inputText value="#{teamsView.teamToAdd.name}" required="true" requiredMessage="Please provide at least a character for the name of the Team." maxlength="20"/>
+				        <p:inputText value="#{teamsView.teamToAdd.team.name}" required="true" requiredMessage="Please provide at least a character for the name of the Team." maxlength="20"/>
 			    		
 			    		<p:outputLabel value="Formed on:" for="date"/> 
 			    		<p:calendar id="date" 
-			    					value="#{teamsView.teamToAdd.formedDate}"
+			    					value="#{teamsView.teamToAdd.team.formedDate}"
 			    					effect="fold" required="true" requiredMessage="Please choose a date."/>
 			    		
 			    		<p:commandButton value="Save" 

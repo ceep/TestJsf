@@ -30,9 +30,9 @@
 <h:body>
 
 
-	<!-- h:panelGroup id="header" layout="block">
+	<h:panelGroup id="header" layout="block">
 		<ui:include src="/WEB-INF/includes/header.xhtml" />
-	</h:panelGroup-->
+	</h:panelGroup>
 
 	<table style="margin-left: 10%; margin-right: 10%;">
 
@@ -48,9 +48,8 @@
 							<p:submenu label="Management" expanded="true">
 								<p:menuitem value="Teams" icon="" update=":content"
 									action="#{pageChooser.setPage('Teams')}"  />
-								<p:menuitem value="Employees" icon=""
-									update=":content" action="#{pageChooser.setPage('Employees')}"
-									async="true" />
+								<p:menuitem value="Employees" icon="" update=":content" 
+									action="#{pageChooser.setPage('Employees')}"/>
 								<p:menuitem value="Tasks" icon="" update=":content"
 									action="#{pageChooser.setPage('Tasks')}" />
 							</p:submenu>

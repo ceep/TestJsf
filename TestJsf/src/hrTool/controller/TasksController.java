@@ -86,7 +86,7 @@ public class TasksController {
 		}
 
 		// updates a task
-		public void updateTask(int taskId, String code, String description, String name, int totalHours, Date startDate, Date endDate){
+		public void updateTask(int taskId, String code, String description, String name, int totalHours, Date startDate, Date endDate, int teamId){
 
 			EntityManager em = getEntityManager();
 			Task t = em.find(Task.class, taskId);
@@ -99,6 +99,7 @@ public class TasksController {
 			t.setTotalHours(totalHours);
 			t.setStartDate(startDate);
 			t.setEndDate(endDate);
+			t.setTeamId(teamId);
 
 			em.getTransaction().commit();
 		}
