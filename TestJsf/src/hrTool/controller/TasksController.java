@@ -102,5 +102,40 @@ public class TasksController {
 
 			em.getTransaction().commit();
 		}
+		
+		// returns a list of tasks inside a company
+		public List <Task> getTasksByTeam(int teamId){
+
+			List <Task> result = new LinkedList<Task>();
+
+			EntityManager em = getEntityManager();
+			CriteriaBuilder cb = em.getCriteriaBuilder();
+			CriteriaQuery cq = cb.createQuery();
+			Root <Task> rt = cq.from(Task.class);
+			cq.where(
+					cb.equal(rt.get("teamId"), teamId)
+					);
+			Query q = em.createQuery(cq);
+
+			result =  q.getResultList();
+
+			return result;
+		}
+		
+		public String getTaskCode(int taskId){
+			List <Task> result = new LinkedList<Task>();
+			EntityManager em = getEntityManager();
+			CriteriaBuilder cb = em.getCriteriaBuilder();
+			CriteriaQuery cq = cb.createQuery();
+			Root <Task> rt = cq.from(Task.class);
+			cq.where(
+					cb.equal(rt.get("taskId"), taskId)
+					);
+			Query q = em.createQuery(cq);
+
+			result =  q.getResultList();
+			
+			return result.get(0).getCode();
+		}
 
 }

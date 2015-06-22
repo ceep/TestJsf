@@ -6,9 +6,9 @@ import java.util.LinkedList;
 public class DashBoardAggregator implements Serializable{
 
 	private String name;
-	private int numberOfEmployees;
 	private int numberOfEmployeesOnVacation;
 	private LinkedList <String> tasks;
+	
 	
 	public String getName() {
 		return name;
@@ -16,12 +16,7 @@ public class DashBoardAggregator implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-	public int getNumberOfEmployees() {
-		return numberOfEmployees;
-	}
-	public void setNumberOfEmployees(int numberOfEmployees) {
-		this.numberOfEmployees = numberOfEmployees;
-	}
+
 	public int getNumberOfEmployeesOnVacation() {
 		return numberOfEmployeesOnVacation;
 	}

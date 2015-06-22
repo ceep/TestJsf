@@ -10,6 +10,8 @@ import javax.persistence.Persistence;
 
 import org.junit.Test;
 
+import com.sun.org.apache.xalan.internal.xsltc.runtime.Hashtable;
+
 
 public class test {
 
@@ -23,7 +25,7 @@ public class test {
 	
 	
 	
-	@Test
+	//@Test
 	public void gebtc(){
 		new EmployeeController(entityManager).getEmployeesByTeamCount(1, 1);
 	}
@@ -31,18 +33,18 @@ public class test {
 	
 	
 	
-	@Test
+	//@Test
 	public void gebt(){
 		System.out.println("Employees by team: " + new EmployeeController(entityManager).getEmployeesByTeam(1, 1).get(0).getName()); 
 	}
 	
-	@Test
+	//@Test
 	public void gebc(){
 		System.out.println("Employees by company: " + new EmployeeController(entityManager).getEmployeesByCompany(1).size()); 
 	}
 	
 	
-	@Test
+	//@Test
 	public void deleteEmployee(){
 		
 		Employee emp = new Employee();
@@ -60,10 +62,18 @@ public class test {
 		System.out.println("Deleted!");
 	}
 
-	@Test
+	//@Test
 	public void gtbc(){
 		System.out.println("Tasks by company: " + new TasksController(entityManager).getTasksByCompany(1).size()); 
 	}
 	
+	//@Test
+	public void test(){
+		Hashtable table = new Hashtable();
+		table.put(2,4);
+		table.put(2, 5);
+		
+		System.out.println(table);
+	}
 	
 }
