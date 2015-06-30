@@ -255,14 +255,14 @@ public class Tasks implements Serializable{
 	public void init() {
 		tasks = new LinkedList<TaskWrapper>();
 		teams=new LinkedList<SelectItem>();
-		System.out.println("Tasks INIT...");
+		//System.out.println("Tasks INIT...");
 	}
 
 
 
 	public void remove() {
 		try {
-			System.out.println("Deleting: " + taskToDelete.getTask().getName() );
+			//System.out.println("Deleting: " + taskToDelete.getTask().getName() );
 			// delete from tasks table
 			new TasksController(Application.getInstance().getEntityManagerFactory()).deleteTask(taskToDelete.getTask());
 			// delete from tasks associations table
@@ -275,19 +275,19 @@ public class Tasks implements Serializable{
 	}
 
 	public void edit(){
-		System.out.println("Editing: " + taskToEdit.getTask().getName());
+		//System.out.println("Editing: " + taskToEdit.getTask().getName());
 	}
 
 	public void save(){
 
-		System.out.println("Saving...");
+		//System.out.println("Saving...");
 		new TasksController(Application.getInstance().getEntityManagerFactory()).updateTask(taskIdToEdit, newCode, newDescription, newName, newTotalHours, newStartDate, newEndDate, Integer.parseInt(newTeamId));
 
 
 	}
 
 	public void add(){
-		System.out.println("Adding task with name: " + taskToAdd.getTask().getName()+ " and value = " + taskToAdd.getTask().getTeamId());
+		//System.out.println("Adding task with name: " + taskToAdd.getTask().getName()+ " and value = " + taskToAdd.getTask().getTeamId());
 
 		// need to set the company 
 		taskToAdd.getTask().setCompanyId(1);
@@ -296,7 +296,7 @@ public class Tasks implements Serializable{
 	}
 
 	public void createTask(){
-		System.out.println("Creating task...");
+		//System.out.println("Creating task...");
 		taskToAdd = new TaskWrapper();
 		taskToAdd.setTask(new Task());
 		taskToAdd.setTeamName(new String());

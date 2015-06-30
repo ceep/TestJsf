@@ -18,7 +18,7 @@ public class PageChooser implements Serializable {
 
     public String getPage() {
     	if(page==null) page = "Dashboard";
-    	System.out.println("PageChooser GET with page link: " + page);
+    	//System.out.println("PageChooser GET with page link: " + page);
 		return page;
 	}
 
@@ -29,7 +29,7 @@ public class PageChooser implements Serializable {
 	@PostConstruct
     public void init() {
 		if(page==null) page = "Dashboard";
-        System.out.println("PageChooser INIT with page set to: " + page);
+        //System.out.println("PageChooser INIT with page set to: " + page);
     }
 
     

@@ -165,7 +165,7 @@ public class Employees implements Serializable{
 		employees = new LinkedList<EmployeeWrapper>();
 		teams=new LinkedList<SelectItem>();
 		tasks = new LinkedList<SelectItem>();
-		System.out.println("Employees INIT...");
+		//System.out.println("Employees INIT...");
 	}
 
 
@@ -174,7 +174,7 @@ public class Employees implements Serializable{
 
 	public void remove() {
 		try {
-			System.out.println("Deleting: " + employeeToDelete.getEmployee().getName());
+			//System.out.println("Deleting: " + employeeToDelete.getEmployee().getName());
 			new EmployeeController(Application.getInstance().getEntityManagerFactory()).deleteEmployee(employeeToDelete.getEmployee());
 
 			// need to remove from requests
@@ -196,13 +196,13 @@ public class Employees implements Serializable{
 	}
 
 	public void edit(){
-		System.out.println("Editing: " + employeeToEdit.getEmployee().getName());
+		//System.out.println("Editing: " + employeeToEdit.getEmployee().getName());
 		newTaskCodes = new LinkedList<String>();
 		employeeToEdit.setNewTaskCodes(new LinkedList<String>());
 	}
 
 	public void save(){
-		System.out.println("Saving...");
+		//System.out.println("Saving...");
 		new EmployeeController(Application.getInstance().getEntityManagerFactory()).updateEmployee(employeeIdToEdit, 
 				newName, newDaysOff, newSpecialDaysOff, newTeamId, newJoinDate, newEndDate);
 		
@@ -222,7 +222,7 @@ public class Employees implements Serializable{
 	}
 
 	public void add(){
-		System.out.println("Adding emp  with name: " + employeeToAdd.getEmployee().getName() + "and id of team: " + employeeToAdd.getEmployee().getTeamId());
+		//System.out.println("Adding emp  with name: " + employeeToAdd.getEmployee().getName() + "and id of team: " + employeeToAdd.getEmployee().getTeamId());
 		// need to set company id
 		employeeToAdd.getEmployee().setCompanyId(1);
 		new EmployeeController(Application.getInstance().getEntityManagerFactory()).addEmployee(employeeToAdd.getEmployee());
@@ -240,7 +240,7 @@ public class Employees implements Serializable{
 	}
 
 	public void createEmployee(){
-		System.out.println("Creating employee...");
+		//System.out.println("Creating employee...");
 		employeeToAdd = new EmployeeWrapper();
 		employeeToAdd.setEmployee(new Employee());
 		employeeToAdd.setTeamName("");

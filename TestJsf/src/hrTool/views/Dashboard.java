@@ -149,7 +149,7 @@ public class Dashboard implements Serializable{
 	@PostConstruct
 	    public void init() {
 		 	dashboards = new LinkedList<DashBoardAggregator>();
-	        System.out.println("Dashboard INIT...");
+	        //System.out.println("Dashboard INIT...");
 	    }
 
 	

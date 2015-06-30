@@ -33,7 +33,15 @@
 	<h:panelGroup id="header" layout="block">
 		<ui:include src="/WEB-INF/includes/header.xhtml" />
 	</h:panelGroup>
-
+	
+	<h:form id = "crap">
+		<p:menubar style="margin-bottom:20px; margin-left: 10%; margin-right: 10%">
+			<f:facet name="options">
+		    	<p:commandLink type="button" value="Logout" action="#{login.logout}" style="width: 85px; height: 10px;" />
+		    </f:facet>
+		</p:menubar>
+	</h:form>
+	
 	<table style="margin-left: 10%; margin-right: 10%;">
 
 		<tr>

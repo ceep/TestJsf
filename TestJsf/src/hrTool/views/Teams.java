@@ -100,12 +100,12 @@ public class Teams implements Serializable{
 	@PostConstruct
 	public void init() {
 		teams = new LinkedList<TeamWrapper>();
-		System.out.println("Teams INIT...");
+		//System.out.println("Teams INIT...");
 	}
 
 	public void remove() {
 		try {
-			System.out.println("Deleting: " + teamToDelete.getTeam().getName());
+			//System.out.println("Deleting: " + teamToDelete.getTeam().getName());
 			new TeamController(Application.getInstance().getEntityManagerFactory()).deleteTeam(teamToDelete.getTeam());
 			
 			// need to delete from other tables the reference to that team
@@ -119,12 +119,12 @@ public class Teams implements Serializable{
 	}
 
 	public void edit(){
-		System.out.println("Editing: " + teamToEdit.getTeam().getName());
+		//System.out.println("Editing: " + teamToEdit.getTeam().getName());
 	}
 
 	public void save(){
 
-		System.out.println("Saving...");
+		//System.out.println("Saving...");
 
 		new TeamController(Application.getInstance().getEntityManagerFactory()).updateTeam(teamIdToEdit, newName, newformedDate);
 
@@ -132,7 +132,7 @@ public class Teams implements Serializable{
 	}
 
 	public void add(){
-		System.out.println("Adding team with name: " + teamToAdd.getTeam().getName());
+		//System.out.println("Adding team with name: " + teamToAdd.getTeam().getName());
 		//need to set company Id
 		teamToAdd.getTeam().setCompanyId(1);
 		
@@ -141,7 +141,7 @@ public class Teams implements Serializable{
 	}
 
 	public void createTeam(){
-		System.out.println("Creating team...");
+		//System.out.println("Creating team...");
 		teamToAdd = new TeamWrapper();
 		teamToAdd.setTeam(new Team());
 	}

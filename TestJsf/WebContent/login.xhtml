@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+	<link rel="stylesheet" href="resources/jquery-ui-1.11.4/jquery-ui.css" />
+	<link rel="stylesheet"
+		href="resources/primeui-2.0/production/primeui-2.0.css" />
+	<link rel="stylesheet"
+		href="resources/primeui-2.0/themes/afternoon/theme.css" />
+	<link rel="stylesheet"
+		href="resources/font-awesome-4.3.0/css/font-awesome.css" />
+
+	<title>Login</title>
+
+	<script type="text/javascript" src="resources/jquery/jquery-2.1.4.js" />
+	<script type="text/javascript"
+		src="resources/jquery-ui-1.11.4/jquery-ui.js" />
+	<script type="text/javascript"
+		src="resources/primeui-2.0/production/primeui-2.0.js" />
+
+</h:head>
+
+	
+<h:body>
+
+	<h:panelGroup id="header" layout="block">
+		<ui:include src="/WEB-INF/includes/header.xhtml" />
+	</h:panelGroup>
+	
+	<br/><br/>
+
+	<h:form>
+		<p:growl id="growl" life="3000" autoUpdate="true" showDetail="true"/>
+	
+		<h:panelGroup id="login" layout="block" >
+			<p:fieldset legend="Please fill in your credentials:" style="width: 100px; margin-left: 10%; margin-right: 10%; margin: 0 auto">
+			    <h:panelGrid columns="2" cellpadding="5">
+			
+			        <h:outputLabel for="username">Username:</h:outputLabel>
+			        <p:inputText id="username" value="#{login.username}" required="true"/>
+			
+			        <h:outputLabel for="password">Password:</h:outputLabel>
+			        <p:password id="password" value="#{login.password}" required="true"/>
+			
+			    </h:panelGrid>
+			
+			    <h:commandButton value="Login" action="#{login.login}"/>
+			</p:fieldset>
+		</h:panelGroup>
+	</h:form>
+	
+</h:body>
+</html>
