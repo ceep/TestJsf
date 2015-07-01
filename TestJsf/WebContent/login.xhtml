@@ -29,24 +29,24 @@
 	
 <h:body>
 
-	<h:panelGroup id="header" layout="block">
+	<!-- h:panelGroup id="header" layout="block">
 		<ui:include src="/WEB-INF/includes/header.xhtml" />
-	</h:panelGroup>
+	</h:panelGroup-->
 	
 	<br/><br/>
 
 	<h:form>
-		<p:growl id="growl" life="3000" autoUpdate="true" showDetail="true"/>
+		<p:growl id="growl" life="3000" autoUpdate="true" showDetail="false"/>
 	
 		<h:panelGroup id="login" layout="block" >
 			<p:fieldset legend="Please fill in your credentials:" style="width: 100px; margin-left: 10%; margin-right: 10%; margin: 0 auto">
 			    <h:panelGrid columns="2" cellpadding="5">
 			
 			        <h:outputLabel for="username">Username:</h:outputLabel>
-			        <p:inputText id="username" value="#{login.username}" required="true"/>
+			        <p:inputText id="username" value="#{login.username}" required="true" requiredMessage="Username is required."/>
 			
 			        <h:outputLabel for="password">Password:</h:outputLabel>
-			        <p:password id="password" value="#{login.password}" required="true"/>
+			        <p:password id="password" value="#{login.password}" required="true" requiredMessage="Password is required."/>
 			
 			    </h:panelGrid>
 			

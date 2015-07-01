@@ -10,7 +10,7 @@
 
 	<link rel="stylesheet" href="resources/jquery-ui-1.11.4/jquery-ui.css" />
 	<link rel="stylesheet"
-		href="resources/primeui-2.0/production/primeui-2.0.css" />
+		href="resources/primeui-2.0/production/primeui-2.0-min.css" />
 	<link rel="stylesheet"
 		href="resources/primeui-2.0/themes/afternoon/theme.css" />
 	<link rel="stylesheet"
@@ -18,11 +18,11 @@
 
 	<title>Dashboard</title>
 
-	<script type="text/javascript" src="resources/jquery/jquery-2.1.4.js" />
+	<!-- script type="text/javascript" src="resources/jquery/jquery-2.1.4.js" /-->
 	<script type="text/javascript"
 		src="resources/jquery-ui-1.11.4/jquery-ui.js" />
 	<script type="text/javascript"
-		src="resources/primeui-2.0/production/primeui-2.0.js" />
+		src="resources/primeui-2.0/production/primeui-2.0-min.js" />
 
 </h:head>
 
@@ -30,19 +30,28 @@
 <h:body>
 
 
-	<h:panelGroup id="header" layout="block">
+	<h:panelGroup id="header" layout="block" >
 		<ui:include src="/WEB-INF/includes/header.xhtml" />
 	</h:panelGroup>
 	
-	<h:form id = "crap">
-		<p:menubar style="margin-bottom:20px; margin-left: 10%; margin-right: 10%">
+	<h:form id = "topMenuBar">
+		<p:menubar style="	max-width: 890px;
+					        width: 890px;
+					        min-width:  890px;
+					        margin: auto;
+					        margin-bottom:20px;
+					        height: 20px">
 			<f:facet name="options">
 		    	<p:commandLink type="button" value="Logout" action="#{login.logout}" style="width: 85px; height: 10px;" />
 		    </f:facet>
 		</p:menubar>
 	</h:form>
 	
-	<table style="margin-left: 10%; margin-right: 10%;">
+	<table style="max-width: 900px;
+			       width: 900px;
+			       min-width:  900px;
+			       margin: auto;" 
+			       >
 
 		<tr>
 			<td style="vertical-align: top;">
@@ -51,27 +60,29 @@
 						<p:panelMenu style="width:150px;">
 							<p:submenu label="Home" expanded="true">
 								<p:menuitem value="Overview" update=":content"
-									action="#{pageChooser.setPage('Dashboard')}"/>
+									action="#{pageChooser.setPage('Dashboard')}" ajax="false"/>
 							</p:submenu>
 							<p:submenu label="Management" expanded="true">
 								<p:menuitem value="Teams" icon="" update=":content"
-									action="#{pageChooser.setPage('Teams')}"  />
+									action="#{pageChooser.setPage('Teams')}"  ajax="false"/>
 								<p:menuitem value="Employees" icon="" update=":content" 
-									action="#{pageChooser.setPage('Employees')}"/>
+									action="#{pageChooser.setPage('Employees')}" ajax="false"/>
 								<p:menuitem value="Tasks" icon="" update=":content"
-									action="#{pageChooser.setPage('Tasks')}" />
+									action="#{pageChooser.setPage('Tasks')}" ajax="false"/>
 							</p:submenu>
 							<p:separator />
-							<p:submenu label="Requests" expanded="true">
-								<p:menuitem value="Show" update=":content"
-									action="#{pageChooser.setPage('ShowRequests')}" />
+							<p:submenu label="Scheduler" expanded="true">
+								<p:menuitem value="Requests" update=":content"
+									action="#{pageChooser.setPage('ShowRequests')}" ajax="false"/>
+								<p:menuitem value="Meetings" update=":content"
+									action="#{pageChooser.setPage('Meetings')}" ajax="false"/>
 							</p:submenu>
 							<p:separator />
 							<p:submenu label="Reports" expanded="true">
 								<p:menuitem value="Days off" update=":content"
-									action="#{pageChooser.setPage('DaysOff')}" />
+									action="#{pageChooser.setPage('DaysOff')}" ajax="false"/>
 								<p:menuitem value="Tasks Completion" update=":content"
-									action="#{pageChooser.setPage('RemainingTasks')}" />
+									action="#{pageChooser.setPage('RemainingTasks')}" ajax="false"/>
 							</p:submenu>
 							
 						</p:panelMenu>
@@ -79,7 +90,7 @@
 				</h:form>
 			</td>
 
-			<td style="width: 5%"></td>
+			<td style="width: 2%"></td>
 
 			<td style="vertical-align: top;">
 					<h:panelGroup id="content" layout="block" >
